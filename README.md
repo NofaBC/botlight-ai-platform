@@ -233,6 +233,6 @@ In addition to BotLight AI, NOFA Business Consulting offers:
 
 ---
 
-**Built with ❤️ by NOFA Business Consulting, LLC - Empowering businesses through intelligent automation.**
+**Built with ❤️ by NOFA Business Consulting, LLC (FirstBrick) - Empowering businesses through intelligent automation.**
 
 *Last updated: July 2025*
