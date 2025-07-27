@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BotLight AI - Client Dashboard</title>
+    <title>BotLight AI - Smart Chatbot Solutions for Your Business</title>
+    <meta name="description" content="Transform your customer service with AI-powered chatbots. No technical skills required. Setup in minutes, not months.">
     <style>
         * {
             margin: 0;
@@ -13,280 +14,160 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            line-height: 1.6;
             color: #333;
         }
 
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 280px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .logo-section {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
         }
 
-        .logo-section h1 {
-            font-size: 1.8em;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 5px;
+            line-height: 1.2;
         }
 
-        .client-info {
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-
-        .nav-menu {
-            list-style: none;
-        }
-
-        .nav-item {
-            margin-bottom: 10px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
-        }
-
-        .nav-icon {
-            margin-right: 12px;
-            width: 20px;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .page-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .page-header h2 {
-            font-size: 2em;
-            color: #2d3748;
-            margin-bottom: 10px;
-        }
-
-        .page-header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-
-        /* Content Sections */
-        .content-section {
-            display: none;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        /* Training Section */
-        .training-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .training-card {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .training-card:hover {
-            border-color: #4facfe;
-            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.1);
-        }
-
-        .training-card h3 {
-            color: #2d3748;
-            margin-bottom: 15px;
+        .hero-text .subtitle {
             font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-weight: 300;
         }
 
-        .training-card p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
+        .hero-text .description {
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            line-height: 1.8;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 15px 30px;
             border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            border-radius: 50px;
             font-size: 16px;
             font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
         }
 
-        .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* Customization Section */
-        .customization-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+        .hero-visual {
+            position: relative;
         }
 
-        .color-picker-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .color-preview {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        /* Preview Section */
-        .preview-container {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 30px;
-            align-items: start;
-        }
-
-        .preview-chatbot {
-            width: 100%;
-            height: 500px;
-            border: 2px solid #e2e8f0;
+        .chatbot-demo {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: transform 0.3s ease;
         }
 
-        .preview-header {
+        .chatbot-demo:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+        }
+
+        .demo-header {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
             padding: 20px;
             text-align: center;
         }
 
-        .preview-chat {
-            height: 380px;
-            padding: 20px;
-            overflow-y: auto;
+        .demo-chat {
+            padding: 30px;
+            height: 350px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            color: #333;
         }
 
-        .preview-message {
+        .demo-message {
             max-width: 80%;
             padding: 12px 18px;
             border-radius: 18px;
-            animation: slideIn 0.3s ease-out;
+            animation: fadeInUp 0.6s ease-out;
         }
 
-        .preview-user {
+        .demo-user {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 5px;
         }
 
-        .preview-bot {
+        .demo-bot {
             background: #f0f8ff;
             color: #333;
             align-self: flex-start;
@@ -294,522 +175,492 @@
             border: 1px solid #e0e8f0;
         }
 
-        .preview-input {
-            padding: 15px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .preview-input input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
-        /* Deploy Section */
-        .deploy-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .deploy-card {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .deploy-card h3 {
-            color: #2d3748;
-            margin-bottom: 15px;
-        }
-
-        .deploy-card p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .code-block {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 10px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 12px;
-            margin: 15px 0;
-            overflow-x: auto;
-        }
-
-        /* Status Indicators */
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .status-training {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-ready {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-deployed {
-            background: #cce5ff;
-            color: #0066cc;
-        }
-
-        /* Progress Bar */
-        .progress-bar {
-            background: #e2e8f0;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .progress-fill {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .dashboard-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-            }
-            
-            .nav-menu {
-                display: flex;
-                overflow-x: auto;
-                gap: 10px;
-                padding: 10px 0;
-            }
-            
-            .nav-item {
-                margin-bottom: 0;
-                flex-shrink: 0;
-            }
-            
-            .main-content {
-                padding: 20px;
-            }
-            
-            .training-grid,
-            .customization-grid,
-            .deploy-options {
-                grid-template-columns: 1fr;
-            }
-            
-            .preview-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @keyframes slideIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-login {
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-client {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: #f8fafc;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+
+        .section-header p {
+            font-size: 1.2em;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .price {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .price-subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .price-features {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .price-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 0;
+            background: #2d3748;
+            color: white;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .contact-item {
+            padding: 30px;
+        }
+
+        .contact-item h4 {
+            margin-bottom: 15px;
+            color: #4facfe;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5em;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .chatbot-demo {
+                transform: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar Navigation -->
-        <div class="sidebar">
-            <div class="logo-section">
-                <h1>BotLight AI</h1>
-                <div class="client-info">
-                    <div><strong>Acme Restaurant</strong></div>
-                    <div>john@acmerestaurant.com</div>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">BotLight AI</div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="login-buttons">
+                    <a href="https://botlight-ai.vercel.app/" class="btn-login btn-admin" target="_blank">Admin Dashboard</a>
+                    <a href="#contact" class="btn-login btn-client">Client Portal (Coming Soon)</a>
                 </div>
             </div>
-            
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active" data-section="training">
-                        <span class="nav-icon">🎓</span>
-                        Train Your Bot
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="customize">
-                        <span class="nav-icon">🎨</span>
-                        Customize
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="preview">
-                        <span class="nav-icon">👁️</span>
-                        Preview & Test
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="deploy">
-                        <span class="nav-icon">🚀</span>
-                        Deploy Live
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="analytics">
-                        <span class="nav-icon">📊</span>
-                        Analytics
-                    </a>
-                </li>
-            </ul>
         </div>
+    </nav>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Page Header -->
-            <div class="page-header">
-                <h2>Welcome to Your AI Assistant Builder</h2>
-                <p>Create and customize an intelligent chatbot for your business in just a few simple steps.</p>
-                <div style="margin-top: 15px;">
-                    <span class="status-indicator status-training">
-                        🔄 Training in Progress
-                    </span>
-                </div>
-            </div>
-
-            <!-- Training Section -->
-            <div id="training" class="content-section active">
-                <h3 style="margin-bottom: 30px; font-size: 1.8em; color: #2d3748;">Step 1: Train Your AI Assistant</h3>
-                
-                <div class="training-grid">
-                    <div class="training-card">
-                        <h3>🌐 Add Your Website</h3>
-                        <p>Your AI will learn about your business, services, and policies directly from your website.</p>
-                        
-                        <div class="form-group">
-                            <label for="website-url">Website URL</label>
-                            <input type="url" id="website-url" placeholder="https://yourwebsite.com" value="https://acmerestaurant.com">
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="trainFromWebsite()">
-                            🔍 Analyze Website
-                        </button>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Smart AI Chatbots for Every Business</h1>
+                    <p class="subtitle">No Technical Skills Required</p>
+                    <p class="description">
+                        Transform your customer service with intelligent AI chatbots that understand your business. 
+                        Train your bot with your website, upload your FAQs, and go live in minutes.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="#contact" class="btn btn-primary">
+                            🚀 Get Started Today
+                        </a>
+                        <a href="http://calendly.com/farhad-nofa" class="btn btn-secondary" target="_blank">
+                            📞 Book Consultation
+                        </a>
                     </div>
-
-                    <div class="training-card">
-                        <h3>📄 Upload Documents</h3>
-                        <p>Add your menu, FAQ, policies, or any documents your AI should know about.</p>
-                        
-                        <div class="form-group">
-                            <label for="documents">Select Files (PDF, TXT, DOC)</label>
-                            <input type="file" id="documents" multiple accept=".pdf,.txt,.doc,.docx">
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="uploadDocuments()">
-                            📤 Upload Files
-                        </button>
-                    </div>
+                    <p style="opacity: 0.7; font-size: 0.9em;">
+                        ✨ Powered by NOFA Business Consulting | 📍 Gaithersburg, MD
+                    </p>
                 </div>
 
-                <div class="training-card">
-                    <h3>💼 Business Context</h3>
-                    <p>Help your AI understand your business better by providing specific context and instructions.</p>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div class="form-group">
-                            <label for="business-type">Business Type</label>
-                            <select id="business-type">
-                                <option value="restaurant">Restaurant</option>
-                                <option value="retail">Retail Store</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="real-estate">Real Estate</option>
-                                <option value="services">Professional Services</option>
-                                <option value="other">Other</option>
-                            </select>
+                <div class="hero-visual">
+                    <div class="chatbot-demo">
+                        <div class="demo-header">
+                            <h3>Your Business Bot Demo</h3>
+                            <p>See how it works</p>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="business-hours">Business Hours</label>
-                            <input type="text" id="business-hours" placeholder="Mon-Fri 9AM-6PM" value="Mon-Sun 11AM-10PM">
+                        <div class="demo-chat" id="demoChat">
+                            <div class="demo-message demo-user">Hi! What are your business hours?</div>
+                            <div class="demo-message demo-bot">We're open Monday-Friday 9AM-6PM EST. How can I help you today?</div>
+                            <div class="demo-message demo-user">Do you offer free consultations?</div>
+                            <div class="demo-message demo-bot">Yes! We offer free 30-minute consultations. You can book one at calendly.com/farhad-nofa</div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="special-instructions">Special Instructions</label>
-                        <textarea id="special-instructions" rows="4" placeholder="How should your AI assistant behave? Any specific guidelines?">Always mention our daily specials and ask if customers want to make a reservation. Be friendly and helpful!</textarea>
-                    </div>
-                    
-                    <button class="btn btn-success" onclick="saveBusinessContext()">
-                        💾 Save Context
-                    </button>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 60%"></div>
-                </div>
-                <p style="text-align: center; color: #666; margin-top: 10px;">Training Progress: 60% Complete</p>
-            </div>
-
-            <!-- Customize Section -->
-            <div id="customize" class="content-section">
-                <h3 style="margin-bottom: 30px; font-size: 1.8em; color: #2d3748;">Step 2: Customize Your Bot</h3>
-                
-                <div class="customization-grid">
-                    <div>
-                        <div class="form-group">
-                            <label for="bot-name">Bot Name</label>
-                            <input type="text" id="bot-name" placeholder="e.g., Acme Assistant" value="Acme Restaurant Helper">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="welcome-message">Welcome Message</label>
-                            <textarea id="welcome-message" rows="3" placeholder="Hi! How can I help you today?">Welcome to Acme Restaurant! I can help you with our menu, reservations, or answer any questions you have.</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="personality">Personality Style</label>
-                            <select id="personality">
-                                <option value="friendly">Friendly & Casual</option>
-                                <option value="professional">Professional</option>
-                                <option value="helpful">Helpful & Informative</option>
-                                <option value="enthusiastic">Enthusiastic</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="form-group">
-                            <label>Brand Colors</label>
-                            <div class="color-picker-group">
-                                <div>
-                                    <label for="primary-color" style="font-size: 14px; margin-bottom: 5px;">Primary</label>
-                                    <input type="color" id="primary-color" value="#4facfe">
-                                </div>
-                                <div class="color-preview" id="primary-preview" style="background: #4facfe;"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="bot-avatar">Bot Avatar (Optional)</label>
-                            <input type="file" id="bot-avatar" accept="image/*">
-                            <small style="color: #666;">Upload a logo or image for your bot</small>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="updatePreview()">
-                            🎨 Update Preview
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Preview Section -->
-            <div id="preview" class="content-section">
-                <h3 style="margin-bottom: 30px; font-size: 1.8em; color: #2d3748;">Step 3: Preview & Test Your Bot</h3>
-                
-                <div class="preview-container">
-                    <div>
-                        <h4 style="margin-bottom: 20px; color: #2d3748;">Test Your Bot</h4>
-                        <p style="color: #666; margin-bottom: 20px;">Try asking questions your customers might ask. Test different scenarios to make sure your bot responds correctly.</p>
-                        
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                            <h5 style="color: #2d3748; margin-bottom: 15px;">Suggested Test Questions:</h5>
-                            <ul style="color: #666; line-height: 1.8;">
-                                <li>"What are your business hours?"</li>
-                                <li>"Do you offer delivery?"</li>
-                                <li>"What's on the menu today?"</li>
-                                <li>"How can I make a reservation?"</li>
-                                <li>"Where are you located?"</li>
-                            </ul>
-                        </div>
-                        
-                        <button class="btn btn-success" onclick="testBot()">
-                            🧪 Run Full Test
-                        </button>
-                    </div>
-                    
-                    <div class="preview-chatbot">
-                        <div class="preview-header" id="preview-bot-header">
-                            <h3 id="preview-bot-name">Acme Restaurant Helper</h3>
-                            <p>Smart Assistant</p>
-                        </div>
-                        <div class="preview-chat" id="preview-chat">
-                            <div class="preview-message preview-bot">
-                                Welcome to Acme Restaurant! I can help you with our menu, reservations, or answer any questions you have.
-                            </div>
-                        </div>
-                        <div class="preview-input">
-                            <input type="text" placeholder="Type your message..." id="test-message" onkeypress="handleTestMessage(event)">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Deploy Section -->
-            <div id="deploy" class="content-section">
-                <h3 style="margin-bottom: 30px; font-size: 1.8em; color: #2d3748;">Step 4: Deploy Your Bot</h3>
-                
-                <div class="deploy-options">
-                    <div class="deploy-card">
-                        <h3>🌐 Embed on Website</h3>
-                        <p>Add this code to your website to embed the chatbot directly on your pages.</p>
-                        
-                        <div class="code-block" id="embed-code">
-&lt;iframe src="https://botlight-ai-platform.vercel.app/chatbots/acme-restaurant" 
-        width="400" height="600" 
-        style="border: none; border-radius: 15px;"&gt;
-&lt;/iframe&gt;
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="copyEmbedCode()">
-                            📋 Copy Embed Code
-                        </button>
-                    </div>
-                    
-                    <div class="deploy-card">
-                        <h3>🔗 Direct Link</h3>
-                        <p>Share this direct link with customers or add it as a button on your website.</p>
-                        
-                        <div class="code-block" id="direct-link">
-https://botlight-ai-platform.vercel.app/chatbots/acme-restaurant
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="copyDirectLink()">
-                            📋 Copy Link
-                        </button>
-                        
-                        <button class="btn btn-success" onclick="openLiveBot()" style="margin-top: 10px;">
-                            🚀 Open Live Bot
-                        </button>
-                    </div>
-                </div>
-                
-                <div style="background: #f0f8ff; border: 2px solid #4facfe; border-radius: 15px; padding: 25px; text-align: center;">
-                    <h4 style="color: #2d3748; margin-bottom: 15px;">🎉 Congratulations!</h4>
-                    <p style="color: #666; margin-bottom: 20px;">Your AI assistant is ready to help your customers 24/7. It will automatically answer questions about your business and can be updated anytime from this dashboard.</p>
-                    
-                    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                        <span class="status-indicator status-deployed">
-                            ✅ Bot Deployed Successfully
-                        </span>
-                        <span class="status-indicator status-ready">
-                            🤖 AI Training Complete
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Analytics Section -->
-            <div id="analytics" class="content-section">
-                <h3 style="margin-bottom: 30px; font-size: 1.8em; color: #2d3748;">Bot Analytics</h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 15px; text-align: center;">
-                        <div style="font-size: 2em; font-weight: bold; color: #4facfe;">127</div>
-                        <div style="color: #666;">Total Conversations</div>
-                    </div>
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 15px; text-align: center;">
-                        <div style="font-size: 2em; font-weight: bold; color: #38ef7d;">94%</div>
-                        <div style="color: #666;">Customer Satisfaction</div>
-                    </div>
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 15px; text-align: center;">
-                        <div style="font-size: 2em; font-weight: bold; color: #f093fb;">1.2min</div>
-                        <div style="color: #666;">Avg Response Time</div>
-                    </div>
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 15px; text-align: center;">
-                        <div style="font-size: 2em; font-weight: bold; color: #667eea;">24/7</div>
-                        <div style="color: #666;">Availability</div>
-                    </div>
-                </div>
-                
-                <div style="background: #f8fafc; padding: 25px; border-radius: 15px;">
-                    <h4 style="color: #2d3748; margin-bottom: 15px;">Most Asked Questions</h4>
-                    <div style="color: #666; line-height: 2;">
-                        <div>1. "What are your hours?" - 23 times</div>
-                        <div>2. "Do you have vegetarian options?" - 18 times</div>
-                        <div>3. "How do I make a reservation?" - 15 times</div>
-                        <div>4. "What's your address?" - 12 times</div>
-                        <div>5. "Do you deliver?" - 11 times</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose BotLight AI?</h2>
+                <p>Powerful AI chatbots designed for real businesses, not just tech companies.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Quick Setup</h3>
+                    <p>Just paste your website URL and upload your documents. Your AI chatbot learns your business automatically and goes live in minutes.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Business-Specific Training</h3>
+                    <p>Upload your FAQs, policies, and product information. Your bot becomes an expert on YOUR business, not a generic assistant.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Your Brand, Your Style</h3>
+                    <p>Customize colors, messaging, and personality to match your brand. Your customers will think it's part of your team.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Enterprise AI Models</h3>
+                    <p>Powered by Claude, GPT-4, and other leading AI models. Get enterprise-grade intelligence at small business prices.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Smart Analytics</h3>
+                    <p>See what customers are asking, track satisfaction, and identify opportunities to improve your business.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Always Learning</h3>
+                    <p>Your bot gets smarter over time, learning from conversations and staying updated with your latest business information.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Professional AI chatbots that pay for themselves</p>
+            </div>
+
+            <div class="pricing-card">
+                <div class="price">$299</div>
+                <div class="price-subtitle">One-time setup fee</div>
+                
+                <div class="price">$99/month</div>
+                <div class="price-subtitle">Per chatbot (starting price)</div>
+
+                <ul class="price-features">
+                    <li>✅ Complete bot setup & training</li>
+                    <li>✅ Custom branding & design</li>
+                    <li>✅ Website & document training</li>
+                    <li>✅ Unlimited conversations</li>
+                    <li>✅ Analytics & insights</li>
+                    <li>✅ Ongoing support & updates</li>
+                </ul>
+
+                <a href="#contact" class="btn btn-primary">Start Your Bot Today</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Ready to Transform Your Customer Service?</h2>
+                <p>Let's build an AI chatbot that understands your business</p>
+            </div>
+
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h4>📞 Call Us</h4>
+                    <p><a href="tel:240-426-1543" style="color: white;">(240) 426-1543</a></p>
+                </div>
+
+                <div class="contact-item">
+                    <h4>📧 Email</h4>
+                    <p><a href="mailto:farhad@nofabusinessconsulting.com" style="color: white;">farhad@nofabusinessconsulting.com</a></p>
+                </div>
+
+                <div class="contact-item">
+                    <h4>🗓️ Book Consultation</h4>
+                    <p><a href="http://calendly.com/farhad-nofa" target="_blank" style="color: #4facfe;">Schedule Free 30-Min Call</a></p>
+                </div>
+
+                <div class="contact-item">
+                    <h4>🌐 Website</h4>
+                    <p><a href="https://nofabusinessconsulting.com" target="_blank" style="color: white;">nofabusinessconsulting.com</a></p>
+                </div>
+            </div>
+
+            <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <p style="opacity: 0.8;">
+                    <strong>NOFA Business Consulting, LLC</strong> | Gaithersburg, MD<br>
+                    Empowering businesses through intelligent automation
+                </p>
+            </div>
+        </div>
+    </section>
 
     <script>
-        // Navigation handling
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
-                // Update active nav
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                
-                // Show corresponding section
-                const section = link.getAttribute('data-section');
-                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-                document.getElementById(section).classList.add('active');
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             });
         });
 
-        // Training functions
-        function trainFromWebsite() {
-            const url = document.getElementById('website-url').value;
-            if (url) {
-                showNotification('🔍 Analyzing website: ' + url, 'success');
-                // Simulate training progress
-                updateProgress(80);
-            } else {
-                showNotification('⚠️ Please enter a valid website URL', 'warning');
+        // Animated demo chat
+        function animateDemo() {
+            const chatMessages = [
+                { type: 'user', text: 'What services do you offer?' },
+                { type: 'bot', text: 'We provide AI chatbot solutions, business consulting, and digital transformation services. How can we help your business?' },
+                { type: 'user', text: 'How much does it cost?' },
+                { type: 'bot', text: '$299 setup + $99/month. This includes complete training, customization, and ongoing support.' }
+            ];
+
+            let currentIndex = 0;
+            const demoChat = document.getElementById('demoChat');
+
+            function addMessage() {
+                if (currentIndex < chatMessages.length) {
+                    const message = chatMessages[currentIndex];
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `demo-message demo-${message.type}`;
+                    messageDiv.textContent = message.text;
+                    
+                    demoChat.appendChild(messageDiv);
+                    currentIndex++;
+                    
+                    setTimeout(addMessage, 2000);
+                } else {
+                    // Reset after showing all messages
+                    setTimeout(() => {
+                        demoChat.innerHTML = `
+                            <div class="demo-message demo-user">Hi! What are your business hours?</div>
+                            <div class="demo-message demo-bot">We're open Monday-Friday 9AM-6PM EST. How can I help you today?</div>
+                            <div class="demo-message demo-user">Do you offer free consultations?</div>
+                            <div class="demo-message demo-bot">Yes! We offer free 30-minute consultations. You can book one at calendly.com/farhad-nofa</div>
+                        `;
+                        currentIndex = 0;
+                        setTimeout(animateDemo, 3000);
+                    }, 3000);
+                }
             }
+
+            setTimeout(addMessage, 2000);
         }
 
-        function uploadDocuments() {
-            const files = document.getElementById('documents').files;
-            if (files.length > 0) {
-                showNotification(`📤 Uploading ${files.length} document(s)...`, 'success');
-                updateProgress(90);
+        // Start demo animation
+        setTimeout(animateDemo, 3000);
+
+        // Navigation background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(255, 255, 255, 0.98)';
+                nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
             } else {
-                showNotification('⚠️ Please select files to upload', 'warning');
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+                nav.style.boxShadow = 'none';
             }
-        }
-
-        function saveBusinessContext() {
-            showNotification('💾 Business context saved successfully!', 'success');
-            updateProgress(100);
-            updateStatus('ready');
-        }
-
-        // Customization functions
-        function updatePreview() {
-            const botName = document.getElementById('bot-name').value;
-            const primaryColor = document.getElementById('primary-color').value;
-            const welcomeMessage = document.getElementById('welcome-message').value;
-            
-            // Update preview
-            document.getElementById('preview-bot-name').textContent = botName;
-            document.getElementById('preview-bot-header').style.background = 
-                `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`;
-            document.getElementById('primary-preview').style.background = primaryColor;
-            
-            // Update welcome message in chat
-            const chat = document.getElementById('preview-chat');
-            chat.innerHTML = `
+        });
+    </script>
+</body>
+</html>
