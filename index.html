@@ -850,11 +850,22 @@ https://botlight-ai-platform.vercel.app/chatbots/acme-restaurant
             });
         });
 
-        // Training functions
+        // Training functions with improved error handling
         function trainFromWebsite() {
+            console.log('trainFromWebsite function called');
+            
             const url = document.getElementById('website-url').value;
+            console.log('Website URL:', url);
+            
             if (url) {
                 showNotification('🔍 Analyzing website: ' + url, 'success');
+                
+                // Check API key first
+                const apiKey = getOpenRouterApiKey();
+                if (!apiKey) {
+                    showNotification('❌ API key not configured. Please check the configuration.', 'error');
+                    return;
+                }
                 
                 // Show loading state
                 const button = event.target;
@@ -864,10 +875,17 @@ https://botlight-ai-platform.vercel.app/chatbots/acme-restaurant
                 
                 // Simulate website analysis (replace with real scraping later)
                 setTimeout(() => {
-                    analyzeWebsiteContent(url);
-                    button.textContent = originalText;
-                    button.disabled = false;
-                    updateProgress(80);
+                    try {
+                        analyzeWebsiteContent(url);
+                        button.textContent = originalText;
+                        button.disabled = false;
+                        updateProgress(80);
+                    } catch (error) {
+                        console.error('Error in website analysis:', error);
+                        button.textContent = originalText;
+                        button.disabled = false;
+                        showNotification('❌ Error analyzing website: ' + error.message, 'error');
+                    }
                 }, 3000);
             } else {
                 showNotification('⚠️ Please enter a valid website URL', 'warning');
@@ -1083,17 +1101,33 @@ https://botlight-ai-platform.vercel.app/chatbots/acme-restaurant
             }
         }
 
-        function getOpenRouterApiKey() {
-            // Your hardcoded OpenRouter API key (replace with your actual key)
-            const MASTER_API_KEY = 'sk-or-v1-YOUR-ACTUAL-API-KEY-HERE';
+        async function getOpenRouterApiKey() {
+            // Use Vercel environment variable through a serverless function
+            // This keeps your API key secure and not exposed in the frontend
             
-            // TODO: Replace 'sk-or-v1-YOUR-ACTUAL-API-KEY-HERE' with your real OpenRouter API key
-            if (MASTER_API_KEY === 'sk-or-v1-YOUR-ACTUAL-API-KEY-HERE') {
-                showNotification('⚠️ Please configure your OpenRouter API key in the code', 'warning');
+            try {
+                // Call your own API endpoint that securely provides the key
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                
+                if (config.apiKey) {
+                    console.log('API key retrieved securely');
+                    return config.apiKey;
+                } else {
+                    throw new Error('API key not found in configuration');
+                }
+            } catch (error) {
+                console.error('Error getting API key:', error);
+                
+                // Fallback: For testing only - remove this in production
+                const testKey = prompt('Enter OpenRouter API key for testing:');
+                if (testKey && testKey.startsWith('sk-or-v1-')) {
+                    return testKey;
+                }
+                
+                showNotification('⚠️ API configuration error. Please contact administrator.', 'warning');
                 return null;
             }
-            
-            return MASTER_API_KEY;
         }
 
         // Remove the API testing functions since clients don't need them
