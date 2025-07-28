@@ -3,840 +3,882 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BotLight AI - Create Your Smart Assistant</title>
+    <title>🤖 BotLight AI - Professional Bot Builder</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.1;
-        }
-
-        .floating-shape {
-            position: absolute;
+        
+        .glass-effect {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .shape1 { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
-        .shape2 { width: 120px; height: 120px; top: 60%; left: 80%; animation-delay: 2s; }
-        .shape3 { width: 60px; height: 60px; top: 80%; left: 20%; animation-delay: 4s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header p {
-            font-size: 1.3em;
-            opacity: 0.9;
-            margin-bottom: 20px;
-        }
-
-        .powered-by {
-            font-size: 0.9em;
-            opacity: 0.7;
-        }
-
-        /* Progress Steps */
-        .progress-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        .steps {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            position: relative;
+        
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
         }
-
-        .step {
-            flex: 1;
-            text-align: center;
-            position: relative;
-            color: white;
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
-
-        .step-number {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2em;
-            margin: 0 auto 10px;
-            transition: all 0.3s ease;
-        }
-
-        .step.active .step-number {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
-        }
-
-        .step.completed .step-number {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        }
-
-        .step-line {
-            position: absolute;
-            top: 25px;
-            left: 50%;
-            right: -50%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-            z-index: -1;
-        }
-
-        .step:last-child .step-line {
-            display: none;
-        }
-
-        /* Main Content Card */
-        .main-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 40px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* Form Sections */
-        .form-section {
-            display: none;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .section-header h2 {
-            font-size: 2.2em;
-            color: #2d3748;
-            margin-bottom: 15px;
-        }
-
-        .section-header p {
-            font-size: 1.1em;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Form Groups */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #2d3748;
-            font-size: 1.1em;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.1);
-            background: white;
-            transform: translateY(-2px);
-        }
-
-        /* Special Input Cards */
-        .input-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .input-card:hover {
-            border-color: #4facfe;
-            box-shadow: 0 15px 35px rgba(79, 172, 254, 0.1);
-            transform: translateY(-5px);
-        }
-
-        .input-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .input-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .input-card h3 {
-            color: #2d3748;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .input-card p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        /* File Upload Styling */
-        .file-upload {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-upload input[type="file"] {
-            opacity: 0;
-            position: absolute;
-            z-index: -1;
-        }
-
-        .file-upload-label {
-            display: block;
-            padding: 20px;
-            border: 2px dashed #4facfe;
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(79, 172, 254, 0.05);
-        }
-
-        .file-upload-label:hover {
-            background: rgba(79, 172, 254, 0.1);
-            border-color: #369bfd;
-        }
-
-        /* Buttons */
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(79, 172, 254, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #2d3748;
-            border: 2px solid #e2e8f0;
-        }
-
-        .btn-secondary:hover {
-            background: #f8fafc;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            box-shadow: 0 10px 25px rgba(56, 239, 125, 0.3);
-        }
-
-        /* Preview Section */
-        .preview-container {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 40px;
-            align-items: start;
-        }
-
-        .preview-info {
-            background: rgba(79, 172, 254, 0.05);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(79, 172, 254, 0.2);
-        }
-
-        .preview-chatbot {
-            background: white;
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e2e8f0;
-            height: 600px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chatbot-header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .chatbot-header h3 {
-            font-size: 1.3em;
-            margin-bottom: 5px;
-        }
-
-        .chatbot-body {
-            flex: 1;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto;
-        }
-
-        .chat-message {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 18px;
-            animation: messageSlide 0.3s ease-out;
-        }
-
-        .chat-message.user {
+        
+        .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 5px;
+            min-height: 100vh;
         }
-
-        .chat-message.bot {
-            background: #f0f8ff;
-            color: #333;
-            align-self: flex-start;
-            border-bottom-left-radius: 5px;
-            border: 1px solid #e0e8f0;
+        
+        .step-indicator {
+            transition: all 0.3s ease;
         }
-
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateY(20px); }
+        
+        .step-indicator.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            transform: scale(1.1);
+        }
+        
+        .step-indicator.completed {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+        }
+        
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .chat-input {
-            padding: 20px;
-            border-top: 1px solid #e2e8f0;
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
         }
-
-        .chat-input input {
-            width: 100%;
-            padding: 12px 18px;
-            border: 1px solid #e2e8f0;
-            border-radius: 25px;
-            font-size: 14px;
-        }
-
-        /* Deploy Section */
-        .deploy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .deploy-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .deploy-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border-color: #4facfe;
-        }
-
-        .deploy-card h3 {
-            color: #2d3748;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-
-        .deploy-card p {
-            color: #666;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .code-display {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 12px;
-            margin: 20px 0;
-            overflow-x: auto;
-            position: relative;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(79, 172, 254, 0.8);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        /* Success Section */
-        .success-celebration {
-            text-align: center;
-            padding: 60px 30px;
-        }
-
-        .success-icon {
-            font-size: 4em;
-            margin-bottom: 30px;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-30px); }
-            60% { transform: translateY(-15px); }
-        }
-
-        .success-celebration h2 {
-            font-size: 2.5em;
-            color: #2d3748;
-            margin-bottom: 20px;
-        }
-
-        .success-celebration p {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 20px 25px;
-            border-radius: 15px;
-            color: white;
-            z-index: 10000;
-            animation: slideInRight 0.3s ease-out;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .notification.success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .notification.error { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); }
-        .notification.warning { background: linear-gradient(135deg, #ffd93d 0%, #ff9a00 100%); }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(300px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 2.2em;
-            }
-            
-            .steps {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .step-line {
-                display: none;
-            }
-            
-            .form-grid,
-            .preview-container,
-            .deploy-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation">
-        <div class="floating-shape shape1"></div>
-        <div class="floating-shape shape2"></div>
-        <div class="floating-shape shape3"></div>
-    </div>
+    <div id="root"></div>
 
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>🤖 BotLight AI</h1>
-            <p>Create Your Smart Business Assistant in Minutes</p>
-            <div class="powered-by">✨ Powered by NOFA Business Consulting | 📍 Gaithersburg, MD</div>
-        </header>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-        <!-- Progress Steps -->
-        <div class="progress-container">
-            <div class="steps">
-                <div class="step active" data-step="1">
-                    <div class="step-number">1</div>
-                    <div class="step-title">Business Info</div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step" data-step="2">
-                    <div class="step-number">2</div>
-                    <div class="step-title">Train AI</div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step" data-step="3">
-                    <div class="step-number">3</div>
-                    <div class="step-title">Customize</div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step" data-step="4">
-                    <div class="step-number">4</div>
-                    <div class="step-title">Preview</div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step" data-step="5">
-                    <div class="step-number">5</div>
-                    <div class="step-title">Deploy</div>
-                </div>
-            </div>
-        </div>
+        const BotLightAI = () => {
+            const [currentStep, setCurrentStep] = useState(1);
+            const [botConfig, setBotConfig] = useState({
+                name: '',
+                industry: '',
+                language: 'English',
+                greeting: '',
+                trainingData: '',
+                primaryColor: '#3b82f6',
+                accentColor: '#8b5cf6'
+            });
 
-        <!-- Main Content -->
-        <div class="main-card">
-            <!-- Step 1: Business Information -->
-            <div class="form-section active" id="step-1">
-                <div class="section-header">
-                    <h2>🏢 Tell Us About Your Business</h2>
-                    <p>Help us understand your business so we can create the perfect AI assistant for your customers.</p>
-                </div>
+            const steps = [
+                { number: 1, title: 'Setup', icon: '🏢' },
+                { number: 2, title: 'Train', icon: '🎓' },
+                { number: 3, title: 'Customize', icon: '🎨' },
+                { number: 4, title: 'Preview', icon: '✨' },
+                { number: 5, title: 'Deploy', icon: '🚀' }
+            ];
 
-                <div class="form-grid">
-                    <div class="input-card">
-                        <h3>🏷️ Basic Information</h3>
-                        <p>Essential details about your business</p>
-                        
-                        <div class="form-group">
-                            <label for="business-name">Business Name</label>
-                            <input type="text" id="business-name" placeholder="Acme Restaurant" value="NOFA Business Consulting">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="business-type">Business Type</label>
-                            <select id="business-type">
-                                <option value="consulting">Business Consulting</option>
-                                <option value="restaurant">Restaurant</option>
-                                <option value="retail">Retail Store</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="real-estate">Real Estate</option>
-                                <option value="services">Professional Services</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="website-url">Website URL</label>
-                            <input type="url" id="website-url" placeholder="https://yourwebsite.com" value="https://nofabusinessconsulting.com">
-                        </div>
+            const nextStep = () => {
+                if (currentStep < 5) setCurrentStep(currentStep + 1);
+            };
+
+            const prevStep = () => {
+                if (currentStep > 1) setCurrentStep(currentStep - 1);
+            };
+
+            // Setup Step Component
+            const SetupStep = () => (
+                <div className="space-y-6">
+                    <div className="text-center">
+                        <h3 className="text-3xl font-bold text-white mb-2">🏢 Tell Us About Your Business</h3>
+                        <p className="text-white/70">Help us understand your business so we can create the perfect AI assistant</p>
                     </div>
-
-                    <div class="input-card">
-                        <h3>⏰ Contact & Hours</h3>
-                        <p>How customers can reach you</p>
-                        
-                        <div class="form-group">
-                            <label for="business-hours">Business Hours</label>
-                            <input type="text" id="business-hours" placeholder="Mon-Fri 9AM-6PM" value="Mon-Fri 9AM-6PM EST">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone-number">Phone Number</label>
-                            <input type="tel" id="phone-number" placeholder="(240) 426-1543" value="(240) 426-1543">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Business Email</label>
-                            <input type="email" id="email" placeholder="info@yourbusiness.com" value="farhad@nofabusinessconsulting.com">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="nextStep(2)">
-                        Continue to AI Training 🚀
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: AI Training -->
-            <div class="form-section" id="step-2">
-                <div class="section-header">
-                    <h2>🎓 Train Your AI Assistant</h2>
-                    <p>Upload your business information so your AI can provide accurate, helpful responses to customers.</p>
-                </div>
-
-                <div class="form-grid">
-                    <div class="input-card">
-                        <h3>📄 Business Documents</h3>
-                        <p>Upload your FAQ, menu, brochures, or any documents your AI should know about</p>
-                        
-                        <div class="form-group">
-                            <div class="file-upload">
-                                <input type="file" id="documents" multiple accept=".pdf,.txt,.doc,.docx">
-                                <label for="documents" class="file-upload-label">
-                                    <div style="font-size: 2em; margin-bottom: 10px;">📤</div>
-                                    <div>Click to upload documents</div>
-                                    <div style="font-size: 0.9em; color: #666; margin-top: 5px;">PDF, TXT, DOC files supported</div>
-                                </label>
+                    
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-white font-medium mb-2">🤖 Bot Name</label>
+                                    <input
+                                        type="text"
+                                        value={botConfig.name}
+                                        onChange={(e) => setBotConfig({...botConfig, name: e.target.value})}
+                                        placeholder="e.g., Sarah, TechSupport Bot, Restaurant Helper"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none"
+                                    />
+                                </div>
+                                
+                                <div>
+                                    <label className="block text-white font-medium mb-2">🏭 Industry</label>
+                                    <select
+                                        value={botConfig.industry}
+                                        onChange={(e) => setBotConfig({...botConfig, industry: e.target.value})}
+                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                    >
+                                        <option value="">Select your industry</option>
+                                        <option value="Restaurant">🍽️ Restaurant</option>
+                                        <option value="Retail">🛍️ Retail</option>
+                                        <option value="Healthcare">🏥 Healthcare</option>
+                                        <option value="Education">🎓 Education</option>
+                                        <option value="Technology">💻 Technology</option>
+                                        <option value="Finance">💰 Finance</option>
+                                        <option value="Real Estate">🏠 Real Estate</option>
+                                        <option value="Other">🔧 Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label className="block text-white font-medium mb-2">🌍 Language</label>
+                                    <select
+                                        value={botConfig.language}
+                                        onChange={(e) => setBotConfig({...botConfig, language: e.target.value})}
+                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                    >
+                                        <option value="English">🇺🇸 English</option>
+                                        <option value="Spanish">🇪🇸 Spanish</option>
+                                        <option value="French">🇫🇷 French</option>
+                                        <option value="German">🇩🇪 German</option>
+                                        <option value="Portuguese">🇵🇹 Portuguese</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="input-card">
-                        <h3>💼 Business Context</h3>
-                        <p>Special instructions for how your AI should behave</p>
-                        
-                        <div class="form-group">
-                            <label for="ai-instructions">AI Instructions</label>
-                            <textarea id="ai-instructions" rows="6" placeholder="Example: Always be professional and helpful. Ask if customers want to schedule a consultation. Mention our 30-day money-back guarantee.">Always be professional and helpful. Focus on our consulting services for AI implementation and business automation. Ask if customers want to schedule a free consultation via Calendly.</textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="button-group">
-                    <button class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
-                    <button class="btn btn-primary" onclick="trainAI()">
-                        🎓 Train AI Assistant
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 3: Customize -->
-            <div class="form-section" id="step-3">
-                <div class="section-header">
-                    <h2>🎨 Customize Your Assistant</h2>
-                    <p>Make your AI assistant match your brand and personality.</p>
-                </div>
-
-                <div class="form-grid">
-                    <div class="input-card">
-                        <h3>🤖 AI Personality</h3>
-                        <p>How should your assistant communicate?</p>
-                        
-                        <div class="form-group">
-                            <label for="assistant-name">Assistant Name</label>
-                            <input type="text" id="assistant-name" placeholder="e.g., NOFA Assistant" value="NOFA AI Assistant">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="personality-style">Communication Style</label>
-                            <select id="personality-style">
-                                <option value="professional">Professional & Informative</option>
-                                <option value="friendly">Friendly & Casual</option>
-                                <option value="helpful">Helpful & Supportive</option>
-                                <option value="enthusiastic">Enthusiastic & Energetic</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="welcome-message">Welcome Message</label>
-                            <textarea id="welcome-message" rows="3" placeholder="Hi! How can I help you today?">Welcome! I'm here to help you learn about our AI consulting services. How can I assist you today?</textarea>
-                        </div>
-                    </div>
-
-                    <div class="input-card">
-                        <h3>🎨 Brand Colors</h3>
-                        <p>Match your brand colors</p>
-                        
-                        <div class="form-group">
-                            <label for="primary-color">Primary Color</label>
-                            <input type="color" id="primary-color" value="#4facfe">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="bot-logo">Logo/Avatar (Optional)</label>
-                            <div class="file-upload">
-                                <input type="file" id="bot-logo" accept="image/*">
-                                <label for="bot-logo" class="file-upload-label">
-                                    <div style="font-size: 2em; margin-bottom: 10px;">🖼️</div>
-                                    <div>Upload your logo</div>
-                                    <div style="font-size: 0.9em; color: #666; margin-top: 5px;">PNG, JPG supported</div>
-                                </label>
+                            
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-white font-medium mb-2">👋 Greeting Message</label>
+                                    <textarea
+                                        value={botConfig.greeting}
+                                        onChange={(e) => setBotConfig({...botConfig, greeting: e.target.value})}
+                                        placeholder="Hi! I'm here to help you with any questions about our services. How can I assist you today?"
+                                        rows="4"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none resize-none"
+                                    />
+                                </div>
+                                
+                                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-4 border border-blue-500/30">
+                                    <h4 className="text-white font-medium mb-2">💡 Pro Tips</h4>
+                                    <ul className="text-white/80 text-sm space-y-1">
+                                        <li>• Choose a friendly, memorable name</li>
+                                        <li>• Keep greetings warm and professional</li>
+                                        <li>• Mention your main services in the greeting</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            );
 
-                <div class="button-group">
-                    <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
-                    <button class="btn btn-primary" onclick="nextStep(4)">
-                        Preview Assistant 👁️
-                    </button>
+            // Train Step Component
+            const TrainStep = () => (
+                <div className="space-y-6">
+                    <div className="text-center">
+                        <h3 className="text-3xl font-bold text-white mb-2">🎓 Train Your AI Assistant</h3>
+                        <p className="text-white/70">Upload your business information so your AI can provide accurate responses</p>
+                    </div>
+                    
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                        <div className="space-y-8">
+                            <div>
+                                <label className="block text-white font-medium mb-4">📄 Business Information</label>
+                                <textarea
+                                    value={botConfig.trainingData}
+                                    onChange={(e) => setBotConfig({...botConfig, trainingData: e.target.value})}
+                                    placeholder="Tell us about your business, services, prices, policies, FAQ, etc. The more information you provide, the better your AI assistant will be at helping customers.
+
+Example:
+- We are a family restaurant serving Italian cuisine
+- Open Tuesday-Sunday, 11am-10pm
+- We offer dine-in, takeout, and delivery
+- Our specialties include homemade pasta and wood-fired pizza
+- Average meal price is $15-25 per person
+- We accept all major credit cards
+- Reservations recommended for groups of 6+"
+                                    rows="12"
+                                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none resize-none"
+                                />
+                                <p className="text-white/60 text-sm mt-2">
+                                    Current length: {botConfig.trainingData.length} characters
+                                </p>
+                            </div>
+                            
+                            <div className="grid md:grid-cols-3 gap-4">
+                                <div className="bg-white/5 rounded-lg p-4 text-center">
+                                    <div className="text-2xl mb-2">📋</div>
+                                    <h4 className="text-white font-medium">Services & Products</h4>
+                                    <p className="text-white/60 text-sm">What you offer and pricing</p>
+                                </div>
+                                <div className="bg-white/5 rounded-lg p-4 text-center">
+                                    <div className="text-2xl mb-2">⏰</div>
+                                    <h4 className="text-white font-medium">Hours & Location</h4>
+                                    <p className="text-white/60 text-sm">When and where to find you</p>
+                                </div>
+                                <div className="bg-white/5 rounded-lg p-4 text-center">
+                                    <div className="text-2xl mb-2">❓</div>
+                                    <h4 className="text-white font-medium">FAQ & Policies</h4>
+                                    <p className="text-white/60 text-sm">Common questions and rules</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            );
 
-            <!-- Step 4: Preview -->
-            <div class="form-section" id="step
-            
-        
+            // Customize Step Component
+            const CustomizeStep = () => (
+                <div className="space-y-6">
+                    <div className="text-center">
+                        <h3 className="text-3xl font-bold text-white mb-2">🎨 Customize Your Assistant</h3>
+                        <p className="text-white/70">Make your AI assistant match your brand and personality</p>
+                    </div>
+                    
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-white font-medium mb-4">🎨 Brand Colors</label>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-white/80 text-sm mb-2">Primary Color</label>
+                                            <div className="flex items-center gap-3">
+                                                <input
+                                                    type="color"
+                                                    value={botConfig.primaryColor}
+                                                    onChange={(e) => setBotConfig({...botConfig, primaryColor: e.target.value})}
+                                                    className="w-12 h-12 rounded-lg border-2 border-white/20"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    value={botConfig.primaryColor}
+                                                    onChange={(e) => setBotConfig({...botConfig, primaryColor: e.target.value})}
+                                                    className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-white/80 text-sm mb-2">Accent Color</label>
+                                            <div className="flex items-center gap-3">
+                                                <input
+                                                    type="color"
+                                                    value={botConfig.accentColor}
+                                                    onChange={(e) => setBotConfig({...botConfig, accentColor: e.target.value})}
+                                                    className="w-12 h-12 rounded-lg border-2 border-white/20"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    value={botConfig.accentColor}
+                                                    onChange={(e) => setBotConfig({...botConfig, accentColor: e.target.value})}
+                                                    className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-white/5 rounded-lg p-4">
+                                    <h4 className="text-white font-medium mb-2">🎭 Personality Settings</h4>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-white/80 text-sm mb-1">Tone</label>
+                                            <select className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none">
+                                                <option value="professional">Professional</option>
+                                                <option value="friendly">Friendly</option>
+                                                <option value="casual">Casual</option>
+                                                <option value="formal">Formal</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-white/80 text-sm mb-1">Response Style</label>
+                                            <select className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none">
+                                                <option value="detailed">Detailed</option>
+                                                <option value="concise">Concise</option>
+                                                <option value="conversational">Conversational</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-6">
+                                <div>
+                                    <h4 className="text-white font-medium mb-4">👀 Live Preview</h4>
+                                    <div className="bg-gray-900 rounded-xl p-4" style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}20, ${botConfig.accentColor}20)`}}>
+                                        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+                                            <div 
+                                                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold"
+                                                style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
+                                            >
+                                                {botConfig.name ? botConfig.name[0] : '🤖'}
+                                            </div>
+                                            <div>
+                                                <h5 className="text-white font-medium">{botConfig.name || 'Your Bot'}</h5>
+                                                <p className="text-green-400 text-xs">● Online</p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <div className="bg-white/10 rounded-lg p-3">
+                                                <p className="text-white text-sm">
+                                                    {botConfig.greeting || "Hi! I'm here to help you with any questions. How can I assist you today?"}
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <div 
+                                                    className="bg-opacity-90 rounded-lg p-3 text-white text-sm max-w-xs"
+                                                    style={{backgroundColor: botConfig.primaryColor}}
+                                                >
+                                                    What are your hours?
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg p-4 border border-green-500/30">
+                                    <h4 className="text-white font-medium mb-2">✨ Customization Tips</h4>
+                                    <ul className="text-white/80 text-sm space-y-1">
+                                        <li>• Use your brand colors for consistency</li>
+                                        <li>• Match your business personality</li>
+                                        <li>• Test different color combinations</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Preview Step Component
+            const PreviewStep = () => {
+                const [messages, setMessages] = useState([
+                    { role: 'bot', content: `Hi! I'm ${botConfig.name || 'your AI assistant'}. ${botConfig.greeting || 'How can I help you today?'}` }
+                ]);
+                const [inputMessage, setInputMessage] = useState('');
+                const [isTyping, setIsTyping] = useState(false);
+
+                const sendMessage = async () => {
+                    if (!inputMessage.trim()) return;
+                    
+                    const userMessage = { role: 'user', content: inputMessage };
+                    setMessages(prev => [...prev, userMessage]);
+                    setInputMessage('');
+                    setIsTyping(true);
+                    
+                    // Simulate bot response (in real version, this calls your API)
+                    setTimeout(() => {
+                        const responses = [
+                            "Thanks for your message! I'm here to help with any questions about our services.",
+                            "I'd be happy to assist you with that. Let me provide you with the information you need.",
+                            "That's a great question! Based on the training data provided, here's what I can tell you...",
+                            "I understand what you're looking for. Let me help you with that right away."
+                        ];
+                        const botResponse = { role: 'bot', content: responses[Math.floor(Math.random() * responses.length)] };
+                        setMessages(prev => [...prev, botResponse]);
+                        setIsTyping(false);
+                    }, 1500);
+                };
+
+                return (
+                    <div className="space-y-6">
+                        <div className="text-center">
+                            <h3 className="text-3xl font-bold text-white mb-2">🚀 Deploy Your Bot</h3>
+                            <p className="text-white/70">Choose how you want to deploy your bot</p>
+                        </div>
+                        
+                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            {/* Deployment Options */}
+                            <div className="grid md:grid-cols-3 gap-4 mb-8">
+                                <button
+                                    onClick={() => setSelectedDeployment('embed')}
+                                    className={`p-4 rounded-xl border-2 transition-all ${
+                                        selectedDeployment === 'embed'
+                                            ? 'border-blue-500 bg-blue-500/20'
+                                            : 'border-white/20 bg-white/5 hover:border-white/40'
+                                    }`}
+                                >
+                                    <div className="text-2xl mb-2">🌐</div>
+                                    <h4 className="text-white font-semibold">Website Embed</h4>
+                                    <p className="text-white/60 text-sm">Add to any website</p>
+                                </button>
+                                <button
+                                    onClick={() => setSelectedDeployment('qr')}
+                                    className={`p-4 rounded-xl border-2 transition-all ${
+                                        selectedDeployment === 'qr'
+                                            ? 'border-blue-500 bg-blue-500/20'
+                                            : 'border-white/20 bg-white/5 hover:border-white/40'
+                                    }`}
+                                >
+                                    <div className="text-2xl mb-2">📱</div>
+                                    <h4 className="text-white font-semibold">QR Code</h4>
+                                    <p className="text-white/60 text-sm">Print & share anywhere</p>
+                                </button>
+                                <button
+                                    onClick={() => setSelectedDeployment('api')}
+                                    className={`p-4 rounded-xl border-2 transition-all ${
+                                        selectedDeployment === 'api'
+                                            ? 'border-blue-500 bg-blue-500/20'
+                                            : 'border-white/20 bg-white/5 hover:border-white/40'
+                                    }`}
+                                >
+                                    <div className="text-2xl mb-2">⚡</div>
+                                    <h4 className="text-white font-semibold">API Integration</h4>
+                                    <p className="text-white/60 text-sm">Custom integrations</p>
+                                </button>
+                            </div>
+
+                            {/* Deployment Content */}
+                            {selectedDeployment === 'embed' && (
+                                <div className="space-y-6">
+                                    <div className="grid lg:grid-cols-2 gap-8">
+                                        <div>
+                                            <h4 className="text-xl font-semibold text-white mb-4">Embed Code</h4>
+                                            <div className="bg-gray-900 rounded-lg p-4 mb-4">
+                                                <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap">
+                                                    {embedCode}
+                                                </pre>
+                                            </div>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText(embedCode)}
+                                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                                            >
+                                                📋 Copy Code
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xl font-semibold text-white mb-4">Preview</h4>
+                                            <div className="bg-gray-100 rounded-lg p-4 min-h-[300px] flex items-center justify-center">
+                                                <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-sm">
+                                                    <div className="flex items-center gap-2 mb-3 pb-2 border-b">
+                                                        <div 
+                                                            className="w-6 h-6 rounded-full"
+                                                            style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
+                                                        ></div>
+                                                        <span className="font-medium text-gray-800">{botConfig.name || 'Your Bot'}</span>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <div className="bg-gray-100 rounded-lg p-2 text-sm text-gray-600">
+                                                            {botConfig.greeting || 'Hello! How can I help you?'}
+                                                        </div>
+                                                        <input 
+                                                            type="text" 
+                                                            placeholder="Type a message..." 
+                                                            className="w-full border rounded-lg px-3 py-2 text-sm"
+                                                            disabled
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {selectedDeployment === 'qr' && (
+                                <div className="text-center space-y-6">
+                                    <div className="grid lg:grid-cols-2 gap-8">
+                                        <div>
+                                            <h4 className="text-xl font-semibold text-white mb-4">QR Code</h4>
+                                            <div className="bg-white rounded-lg p-6 inline-block">
+                                                <img src={qrCode} alt="Bot QR Code" className="w-48 h-48" />
+                                            </div>
+                                            <div className="mt-4 space-x-4">
+                                                <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                                    📄 Download PNG
+                                                </button>
+                                                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                                    📋 Copy Link
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="text-left">
+                                            <h4 className="text-xl font-semibold text-white mb-4">How to Use</h4>
+                                            <div className="space-y-4">
+                                                <div className="flex items-start gap-3">
+                                                    <span className="text-blue-400 font-bold">1.</span>
+                                                    <div>
+                                                        <p className="text-white font-medium">Download QR Code</p>
+                                                        <p className="text-white/60 text-sm">Save the QR code image to your device</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-start gap-3">
+                                                    <span className="text-blue-400 font-bold">2.</span>
+                                                    <div>
+                                                        <p className="text-white font-medium">Print or Display</p>
+                                                        <p className="text-white/60 text-sm">Add to business cards, flyers, or digital displays</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-start gap-3">
+                                                    <span className="text-blue-400 font-bold">3.</span>
+                                                    <div>
+                                                        <p className="text-white font-medium">Customers Scan</p>
+                                                        <p className="text-white/60 text-sm">They'll be taken directly to your bot</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="mt-6 bg-white/5 rounded-lg p-4">
+                                                <p className="text-white font-medium mb-2">Direct Link:</p>
+                                                <p className="text-blue-400 text-sm break-all">{deploymentUrl}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {selectedDeployment === 'api' && (
+                                <div className="space-y-6">
+                                    <div className="grid lg:grid-cols-2 gap-8">
+                                        <div>
+                                            <h4 className="text-xl font-semibold text-white mb-4">API Integration</h4>
+                                            <div className="bg-gray-900 rounded-lg p-4 mb-4">
+                                                <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap">
+{`// API Integration Example
+fetch('/api/chat', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    message: 'Hello from my website!',
+    botConfig: ${JSON.stringify(botConfig, null, 2)}
+  })
+});`}
+                                                </pre>
+                                            </div>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText(`// API Integration code here`)}
+                                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                                            >
+                                                📋 Copy Code
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xl font-semibold text-white mb-4">API Documentation</h4>
+                                            <div className="space-y-4">
+                                                <div className="bg-white/5 rounded-lg p-4">
+                                                    <h5 className="text-white font-medium mb-2">Endpoints</h5>
+                                                    <ul className="text-white/70 text-sm space-y-1">
+                                                        <li>• POST /api/chat - Send message</li>
+                                                        <li>• GET /api/config - Get bot config</li>
+                                                        <li>• POST /api/reset - Reset conversation</li>
+                                                    </ul>
+                                                </div>
+                                                
+                                                <div className="bg-white/5 rounded-lg p-4">
+                                                    <h5 className="text-white font-medium mb-2">Authentication</h5>
+                                                    <p className="text-white/70 text-sm">API calls are authenticated automatically</p>
+                                                </div>
+                                                
+                                                <div className="bg-white/5 rounded-lg p-4">
+                                                    <h5 className="text-white font-medium mb-2">Rate Limits</h5>
+                                                    <p className="text-white/70 text-sm">1000 requests per hour</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Success Message */}
+                            <div className="mt-8 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl p-6 border border-green-500/30">
+                                <div className="text-center">
+                                    <div className="text-4xl mb-4">🎉</div>
+                                    <h4 className="text-2xl font-bold text-white mb-2">Congratulations!</h4>
+                                    <p className="text-white/80 mb-4">Your {botConfig.name || 'AI bot'} is now ready to help your customers!</p>
+                                    
+                                    <div className="grid md:grid-cols-3 gap-4 mt-6">
+                                        <div className="bg-white/10 rounded-lg p-4">
+                                            <div className="text-2xl mb-2">📊</div>
+                                            <h5 className="text-white font-medium">Analytics</h5>
+                                            <p className="text-white/60 text-sm">Track conversations & insights</p>
+                                        </div>
+                                        <div className="bg-white/10 rounded-lg p-4">
+                                            <div className="text-2xl mb-2">🔧</div>
+                                            <h5 className="text-white font-medium">Customize</h5>
+                                            <p className="text-white/60 text-sm">Update anytime in dashboard</p>
+                                        </div>
+                                        <div className="bg-white/10 rounded-lg p-4">
+                                            <div className="text-2xl mb-2">💬</div>
+                                            <h5 className="text-white font-medium">Support</h5>
+                                            <p className="text-white/60 text-sm">24/7 technical assistance</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <button 
+                                        className="mt-6 px-8 py-3 rounded-xl font-medium text-white transition-all transform hover:scale-105"
+                                        style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
+                                    >
+                                        🚀 Go to Dashboard
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Main render function
+            return (
+                <div className="gradient-bg min-h-screen">
+                    {/* Header */}
+                    <div className="container mx-auto px-4 py-8">
+                        <div className="text-center mb-12">
+                            <div className="floating-animation inline-block">
+                                <h1 className="text-5xl font-bold text-white mb-4">
+                                    🤖 <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BotLight AI</span>
+                                </h1>
+                            </div>
+                            <p className="text-xl text-white/80 mb-8">Create Professional AI Assistants in Minutes</p>
+                            
+                            {/* Progress Indicator */}
+                            <div className="flex justify-center items-center space-x-4 mb-8">
+                                {steps.map((step) => (
+                                    <div key={step.number} className="flex items-center">
+                                        <div 
+                                            className={`step-indicator w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 ${
+                                                currentStep === step.number 
+                                                    ? 'active border-white' 
+                                                    : currentStep > step.number 
+                                                        ? 'completed border-green-400' 
+                                                        : 'border-white/30 bg-white/10'
+                                            }`}
+                                        >
+                                            {currentStep > step.number ? '✓' : step.number}
+                                        </div>
+                                        <div className="ml-2 text-left hidden md:block">
+                                            <div className="text-white text-sm font-medium">{step.title}</div>
+                                        </div>
+                                        {step.number < 5 && (
+                                            <div className="w-8 h-0.5 bg-white/30 mx-4 hidden md:block"></div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Step Content */}
+                        <div className="max-w-6xl mx-auto">
+                            {currentStep === 1 && <SetupStep />}
+                            {currentStep === 2 && <TrainStep />}
+                            {currentStep === 3 && <CustomizeStep />}
+                            {currentStep === 4 && <PreviewStep />}
+                            {currentStep === 5 && <DeployStep />}
+                        </div>
+
+                        {/* Navigation */}
+                        <div className="flex justify-between items-center mt-12 max-w-6xl mx-auto">
+                            <button
+                                onClick={prevStep}
+                                disabled={currentStep === 1}
+                                className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                                    currentStep === 1
+                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                        : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
+                                }`}
+                            >
+                                ← Previous
+                            </button>
+                            
+                            <div className="text-white/60">
+                                Step {currentStep} of {steps.length}
+                            </div>
+                            
+                            <button
+                                onClick={nextStep}
+                                disabled={currentStep === 5}
+                                className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                                    currentStep === 5
+                                        ? 'bg-green-600 text-white cursor-default'
+                                        : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
+                                }`}
+                            >
+                                {currentStep === 5 ? '🎉 Complete!' : 'Next →'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Render the app
+        ReactDOM.render(<BotLightAI />, document.getElementById('root'));
+    </script>
+</body>
+</html>
+                            <h3 className="text-3xl font-bold text-white mb-2">✨ Preview Your Bot</h3>
+                            <p className="text-white/70">Test your bot before going live!</p>
+                        </div>
+                        
+                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            <div className="grid lg:grid-cols-2 gap-8">
+                                {/* Bot Preview */}
+                                <div className="space-y-4">
+                                    <h4 className="text-xl font-semibold text-white flex items-center gap-2">
+                                        <span className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+                                        Live Preview
+                                    </h4>
+                                    <div className="bg-gray-900 rounded-xl p-4 min-h-[400px] flex flex-col">
+                                        {/* Chat Header */}
+                                        <div className="flex items-center gap-3 p-3 border-b border-gray-700">
+                                            <div 
+                                                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                                                style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
+                                            >
+                                                {botConfig.name ? botConfig.name[0] : '🤖'}
+                                            </div>
+                                            <div>
+                                                <h5 className="text-white font-medium">{botConfig.name || 'Your Bot'}</h5>
+                                                <p className="text-green-400 text-xs">Online</p>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Messages */}
+                                        <div className="flex-1 p-3 space-y-3 overflow-y-auto max-h-80">
+                                            {messages.map((msg, idx) => (
+                                                <div key={idx} className={`flex chat-message ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                                    <div className={`max-w-xs px-4 py-2 rounded-2xl ${
+                                                        msg.role === 'user' 
+                                                            ? 'text-white' 
+                                                            : 'bg-gray-700 text-white'
+                                                    }`} style={msg.role === 'user' ? {backgroundColor: botConfig.primaryColor} : {}}>
+                                                        {msg.content}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            {isTyping && (
+                                                <div className="flex justify-start">
+                                                    <div className="bg-gray-700 text-white px-4 py-2 rounded-2xl">
+                                                        <div className="flex space-x-1">
+                                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Input */}
+                                        <div className="p-3 border-t border-gray-700">
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={inputMessage}
+                                                    onChange={(e) => setInputMessage(e.target.value)}
+                                                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                                                    placeholder="Type a message..."
+                                                    className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                                />
+                                                <button
+                                                    onClick={sendMessage}
+                                                    style={{backgroundColor: botConfig.primaryColor}}
+                                                    className="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
+                                                >
+                                                    Send
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Configuration Summary */}
+                                <div className="space-y-4">
+                                    <h4 className="text-xl font-semibold text-white">Configuration Summary</h4>
+                                    <div className="space-y-3">
+                                        <div className="bg-white/5 rounded-lg p-4">
+                                            <h5 className="text-white font-medium mb-2">Bot Details</h5>
+                                            <p className="text-white/70 text-sm">Name: {botConfig.name || 'Not set'}</p>
+                                            <p className="text-white/70 text-sm">Industry: {botConfig.industry || 'Not set'}</p>
+                                            <p className="text-white/70 text-sm">Language: {botConfig.language}</p>
+                                        </div>
+                                        
+                                        <div className="bg-white/5 rounded-lg p-4">
+                                            <h5 className="text-white font-medium mb-2">Greeting Message</h5>
+                                            <p className="text-white/70 text-sm">{botConfig.greeting || 'Not set'}</p>
+                                        </div>
+                                        
+                                        <div className="bg-white/5 rounded-lg p-4">
+                                            <h5 className="text-white font-medium mb-2">Training Data</h5>
+                                            <p className="text-white/70 text-sm">
+                                                {botConfig.trainingData ? `${botConfig.trainingData.split(' ').length} words processed` : 'No training data provided'}
+                                            </p>
+                                        </div>
+                                        
+                                        <div className="bg-white/5 rounded-lg p-4">
+                                            <h5 className="text-white font-medium mb-2">Customization</h5>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-4 h-4 rounded-full" style={{backgroundColor: botConfig.primaryColor}}></div>
+                                                <span className="text-white/70 text-sm">Primary: {botConfig.primaryColor}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-4 h-4 rounded-full" style={{backgroundColor: botConfig.accentColor}}></div>
+                                                <span className="text-white/70 text-sm">Accent: {botConfig.accentColor}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg p-4 border border-green-500/30">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="text-green-400">✅</span>
+                                            <h5 className="text-white font-medium">Ready to Deploy!</h5>
+                                        </div>
+                                        <p className="text-white/70 text-sm">Your bot is configured and ready to go live.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Deploy Step Component
+            const DeployStep = () => {
+                const [selectedDeployment, setSelectedDeployment] = useState('embed');
+                const [deploymentUrl, setDeploymentUrl] = useState('');
+                const [qrCode, setQrCode] = useState('');
+                
+                useEffect(() => {
+                    // Generate deployment URL and QR code
+                    const baseUrl = 'https://botlight.ai/chat/';
+                    const botId = Math.random().toString(36).substr(2, 9);
+                    const url = `${baseUrl}${botId}`;
+                    setDeploymentUrl(url);
+                    
+                    // Generate QR code placeholder
+                    setQrCode(`data:image/svg+xml,${encodeURIComponent(`
+                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                            <rect width="200" height="200" fill="white"/>
+                            <rect x="20" y="20" width="160" height="160" fill="black"/>
+                            <rect x="40" y="40" width="120" height="120" fill="white"/>
+                            <rect x="60" y="60" width="80" height="80" fill="black"/>
+                            <rect x="80" y="80" width="40" height="40" fill="white"/>
+                            <text x="100" y="195" text-anchor="middle" font-family="Arial" font-size="10" fill="black">BotLight QR</text>
+                        </svg>
+                    `)}`);
+                }, []);
+
+                const embedCode = `<iframe
+  src="${deploymentUrl}"
+  width="400"
+  height="600"
+  frameborder="0"
+  style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+></iframe>`;
+
+                return (
+                    <div className="space-y-6">
+                        <div className="text-center">
