@@ -378,17 +378,19 @@ Example:
                     if (!inputMessage.trim()) return;
                     
                     const userMessage = { role: 'user', content: inputMessage };
+                    const newMessageCount = messageCount + 1;
+                    
                     setMessages(prev => [...prev, userMessage]);
                     setInputMessage('');
                     setIsTyping(true);
-                    setMessageCount(prev => prev + 1);
+                    setMessageCount(newMessageCount);
                     
                     // Simulate bot response with lead magnet logic
                     setTimeout(() => {
                         let botResponse;
                         
                         // After 2-3 messages, offer lead magnet
-                        if (messageCount >= 2 && !emailCollected && !showEmailCapture) {
+                        if (newMessageCount >= 2 && !emailCollected && !showEmailCapture) {
                             const leadMagnets = [
                                 `Great question! By the way, would you like our free "${botConfig.industry || 'Business'} Success Guide"? It has insider tips and best practices that most businesses don't know. I can email it to you right away!`,
                                 `I'm happy to help with that! Speaking of which, would you like our complimentary "${botConfig.industry || 'Industry'} Insider Report"? It's packed with valuable insights. I can send it to your email instantly!`,
@@ -881,12 +883,15 @@ fetch('/api/chat', {
                                             {showEmailCapture ? (
                                                 <div className="flex gap-2">
                                                     <input
+                                                        key="email-input"
                                                         type="email"
                                                         value={capturedEmail}
                                                         onChange={(e) => setCapturedEmail(e.target.value)}
-                                                        onKeyPress={(e) => e.key === 'Enter' && handleEmailSubmit()}
+                                                        onKeyDown={(e) => e.key === 'Enter' && handleEmailSubmit()}
                                                         placeholder="Enter your email address..."
                                                         className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                                        autoComplete="email"
+                                                        spellCheck="false"
                                                     />
                                                     <button
                                                         onClick={handleEmailSubmit}
@@ -899,12 +904,15 @@ fetch('/api/chat', {
                                             ) : (
                                                 <div className="flex gap-2">
                                                     <input
+                                                        key="chat-input"
                                                         type="text"
                                                         value={inputMessage}
                                                         onChange={(e) => setInputMessage(e.target.value)}
-                                                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                                                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                                                         placeholder="Type a message..."
                                                         className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                                        autoComplete="off"
+                                                        spellCheck="false"
                                                     />
                                                     <button
                                                         onClick={sendMessage}
