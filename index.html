@@ -374,7 +374,18 @@ Example:
                 const [capturedEmail, setCapturedEmail] = useState('');
                 const [emailCollected, setEmailCollected] = useState(false);
 
-                const sendMessage = async () => {
+                // Use useCallback to prevent function recreation on every render
+                const handleInputChange = React.useCallback((e) => {
+                    e.preventDefault();
+                    setInputMessage(e.target.value);
+                }, []);
+
+                const handleEmailChange = React.useCallback((e) => {
+                    e.preventDefault();
+                    setCapturedEmail(e.target.value);
+                }, []);
+
+                const sendMessage = React.useCallback(async () => {
                     if (!inputMessage.trim()) return;
                     
                     const userMessage = { role: 'user', content: inputMessage };
@@ -426,9 +437,9 @@ Example:
                         setMessages(prev => [...prev, botResponse]);
                         setIsTyping(false);
                     }, 1500);
-                };
+                }, [inputMessage, messageCount, emailCollected, showEmailCapture, botConfig.industry]);
 
-                const handleLeadMagnetResponse = (accepted) => {
+                const handleLeadMagnetResponse = React.useCallback((accepted) => {
                     const userResponse = { 
                         role: 'user', 
                         content: accepted ? "Yes, I'd love that!" : "No thanks, maybe later" 
@@ -454,9 +465,9 @@ Example:
                             setMessages(prev => [...prev, botResponse]);
                         }, 1000);
                     }
-                };
+                }, []);
 
-                const handleEmailSubmit = () => {
+                const handleEmailSubmit = React.useCallback(() => {
                     if (!capturedEmail.includes('@')) return;
                     
                     const userResponse = { role: 'user', content: capturedEmail };
@@ -476,7 +487,7 @@ Example:
                         };
                         setMessages(prev => [...prev, botResponse]);
                     }, 1000);
-                };
+                }, [capturedEmail]);
 
                 return (
                     <div className="space-y-6">
@@ -904,13 +915,24 @@ fetch('/api/chat', {
                                             ) : (
                                                 <div className="flex gap-2">
                                                     <input
-                                                        key="chat-input"
                                                         type="text"
                                                         value={inputMessage}
-                                                        onChange={(e) => setInputMessage(e.target.value)}
+                                                        onChange={handleInputChange}
                                                         onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                                                         placeholder="Type a message..."
                                                         className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                                        autoComplete="off"
+                                                        spellCheck="false"
+                                                    />
+                                                    <button
+                                                        onClick={sendMessage}
+                                                        style={{backgroundColor: botConfig.primaryColor}}
+                                                        className="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
+                                                    >
+                                                        Send
+                                                    </button>
+                                                </div>
+                                            )} text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
                                                         autoComplete="off"
                                                         spellCheck="false"
                                                     />
