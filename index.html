@@ -3,1172 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 BotLight AI - Professional Bot Builder</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Input Test - Debug Version</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
         }
         
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 10px;
         }
         
-        .floating-animation {
-            animation: float 6s ease-in-out infinite;
+        .input-test {
+            margin: 20px 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #444;
+            color: white;
+            border: 1px solid #666;
+            border-radius: 5px;
+            font-size: 16px;
         }
         
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #0066cc;
         }
         
-        .step-indicator {
-            transition: all 0.3s ease;
+        .chat-container {
+            background: #444;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
         }
         
-        .step-indicator.active {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            transform: scale(1.1);
+        .messages {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #666;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #555;
         }
         
-        .step-indicator.completed {
-            background: linear-gradient(135deg, #10b981, #3b82f6);
+        .message {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: #666;
         }
         
-        .chat-message {
-            animation: slideIn 0.3s ease-out;
+        .input-row {
+            display: flex;
+            gap: 10px;
         }
         
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .input-row input {
+            flex: 1;
+            margin: 0;
         }
         
-        .pulse-animation {
-            animation: pulse 2s infinite;
+        button {
+            padding: 10px 20px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        button:hover {
+            background: #0052a3;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            background: #0066cc22;
+            border-radius: 5px;
+            border-left: 3px solid #0066cc;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        const BotLightAI = () => {
-            const [currentStep, setCurrentStep] = useState(1);
-            const [botConfig, setBotConfig] = useState({
-                name: '',
-                industry: '',
-                language: 'English',
-                greeting: '',
-                trainingData: '',
-                primaryColor: '#3b82f6',
-                accentColor: '#8b5cf6'
-            });
-
-            const steps = [
-                { number: 1, title: 'Setup', icon: '🏢' },
-                { number: 2, title: 'Train', icon: '🎓' },
-                { number: 3, title: 'Customize', icon: '🎨' },
-                { number: 4, title: 'Preview', icon: '✨' },
-                { number: 5, title: 'Deploy', icon: '🚀' }
-            ];
-
-            const nextStep = () => {
-                if (currentStep < 5) setCurrentStep(currentStep + 1);
-            };
-
-            const prevStep = () => {
-                if (currentStep > 1) setCurrentStep(currentStep - 1);
-            };
-
-            // Setup Step Component
-            const SetupStep = () => (
-                <div className="space-y-6">
-                    <div className="text-center">
-                        <h3 className="text-3xl font-bold text-white mb-2">🏢 Tell Us About Your Business</h3>
-                        <p className="text-white/70">Help us understand your business so we can create the perfect AI assistant</p>
-                    </div>
-                    
-                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                        <div className="grid md:grid-cols-2 gap-8">
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-white font-medium mb-2">🤖 Bot Name</label>
-                                    <input
-                                        type="text"
-                                        value={botConfig.name}
-                                        onChange={(e) => setBotConfig({...botConfig, name: e.target.value})}
-                                        placeholder="e.g., Sarah, TechSupport Bot, Restaurant Helper"
-                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none"
-                                    />
-                                </div>
-                                
-                                <div>
-                                    <label className="block text-white font-medium mb-2">🏭 Industry</label>
-                                    <select
-                                        value={botConfig.industry}
-                                        onChange={(e) => setBotConfig({...botConfig, industry: e.target.value})}
-                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
-                                    >
-                                        <option value="">Select your industry</option>
-                                        <option value="Restaurant">🍽️ Restaurant</option>
-                                        <option value="Retail">🛍️ Retail</option>
-                                        <option value="Healthcare">🏥 Healthcare</option>
-                                        <option value="Education">🎓 Education</option>
-                                        <option value="Technology">💻 Technology</option>
-                                        <option value="Finance">💰 Finance</option>
-                                        <option value="Real Estate">🏠 Real Estate</option>
-                                        <option value="Other">🔧 Other</option>
-                                    </select>
-                                </div>
-                                
-                                <div>
-                                    <label className="block text-white font-medium mb-2">🌍 Language</label>
-                                    <select
-                                        value={botConfig.language}
-                                        onChange={(e) => setBotConfig({...botConfig, language: e.target.value})}
-                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
-                                    >
-                                        <option value="English">🇺🇸 English</option>
-                                        <option value="Spanish">🇪🇸 Spanish</option>
-                                        <option value="French">🇫🇷 French</option>
-                                        <option value="German">🇩🇪 German</option>
-                                        <option value="Portuguese">🇵🇹 Portuguese</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-white font-medium mb-2">👋 Greeting Message</label>
-                                    <textarea
-                                        value={botConfig.greeting}
-                                        onChange={(e) => setBotConfig({...botConfig, greeting: e.target.value})}
-                                        placeholder="Hi! I'm here to help you with any questions about our services. How can I assist you today?"
-                                        rows="4"
-                                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none resize-none"
-                                    />
-                                </div>
-                                
-                                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-4 border border-blue-500/30">
-                                    <h4 className="text-white font-medium mb-2">💡 Pro Tips</h4>
-                                    <ul className="text-white/80 text-sm space-y-1">
-                                        <li>• Choose a friendly, memorable name</li>
-                                        <li>• Keep greetings warm and professional</li>
-                                        <li>• Mention your main services in the greeting</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="test-container">
+        <h1>🔧 Input Testing - Debug Mode</h1>
+        <p>Let's test different input methods to find what works:</p>
+        
+        <!-- Test 1: Pure HTML -->
+        <div class="input-test">
+            <h3>Test 1: Pure HTML Input</h3>
+            <input type="text" placeholder="Type here - pure HTML, no JavaScript" id="test1">
+            <div class="status" id="status1">Status: Ready</div>
+        </div>
+        
+        <!-- Test 2: Simple JavaScript -->
+        <div class="input-test">
+            <h3>Test 2: Simple JavaScript</h3>
+            <input type="text" placeholder="Type here - with simple JS" id="test2">
+            <div class="status" id="status2">Status: Ready</div>
+        </div>
+        
+        <!-- Test 3: Event Handling -->
+        <div class="input-test">
+            <h3>Test 3: With Event Handling</h3>
+            <input type="text" placeholder="Type here - with events" id="test3">
+            <div class="status" id="status3">Status: Ready</div>
+        </div>
+        
+        <!-- Test 4: Simple Chat -->
+        <div class="input-test">
+            <h3>Test 4: Simple Chat Interface</h3>
+            <div class="chat-container">
+                <div class="messages" id="messages">
+                    <div class="message">Bot: Hi! Type a message to test.</div>
                 </div>
-            );
-
-            // Train Step Component
-            const TrainStep = () => (
-                <div className="space-y-6">
-                    <div className="text-center">
-                        <h3 className="text-3xl font-bold text-white mb-2">🎓 Train Your AI Assistant</h3>
-                        <p className="text-white/70">Upload your business information so your AI can provide accurate responses</p>
-                    </div>
-                    
-                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                        <div className="space-y-8">
-                            <div>
-                                <label className="block text-white font-medium mb-4">📄 Business Information</label>
-                                <textarea
-                                    value={botConfig.trainingData}
-                                    onChange={(e) => setBotConfig({...botConfig, trainingData: e.target.value})}
-                                    placeholder="Tell us about your business, services, prices, policies, FAQ, etc. The more information you provide, the better your AI assistant will be at helping customers.
-
-Example:
-- We are a family restaurant serving Italian cuisine
-- Open Tuesday-Sunday, 11am-10pm
-- We offer dine-in, takeout, and delivery
-- Our specialties include homemade pasta and wood-fired pizza
-- Average meal price is $15-25 per person
-- We accept all major credit cards
-- Reservations recommended for groups of 6+"
-                                    rows="12"
-                                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none resize-none"
-                                />
-                                <p className="text-white/60 text-sm mt-2">
-                                    Current length: {botConfig.trainingData.length} characters
-                                </p>
-                            </div>
-                            
-                            <div className="grid md:grid-cols-3 gap-4">
-                                <div className="bg-white/5 rounded-lg p-4 text-center">
-                                    <div className="text-2xl mb-2">📋</div>
-                                    <h4 className="text-white font-medium">Services & Products</h4>
-                                    <p className="text-white/60 text-sm">What you offer and pricing</p>
-                                </div>
-                                <div className="bg-white/5 rounded-lg p-4 text-center">
-                                    <div className="text-2xl mb-2">⏰</div>
-                                    <h4 className="text-white font-medium">Hours & Location</h4>
-                                    <p className="text-white/60 text-sm">When and where to find you</p>
-                                </div>
-                                <div className="bg-white/5 rounded-lg p-4 text-center">
-                                    <div className="text-2xl mb-2">❓</div>
-                                    <h4 className="text-white font-medium">FAQ & Policies</h4>
-                                    <p className="text-white/60 text-sm">Common questions and rules</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="input-row">
+                    <input type="text" placeholder="Type your message..." id="chatInput">
+                    <button onclick="sendMessage()">Send</button>
                 </div>
-            );
+            </div>
+            <div class="status" id="status4">Status: Ready</div>
+        </div>
+        
+        <!-- Test 5: Textarea -->
+        <div class="input-test">
+            <h3>Test 5: Textarea Test</h3>
+            <textarea placeholder="Type here - textarea test" id="test5" rows="3"></textarea>
+            <div class="status" id="status5">Status: Ready</div>
+        </div>
+        
+        <!-- Test 6: ContentEditable -->
+        <div class="input-test">
+            <h3>Test 6: ContentEditable</h3>
+            <div contenteditable="true" 
+                 style="border: 1px solid #666; padding: 10px; background: #444; border-radius: 5px; min-height: 40px;"
+                 id="test6">Type here - contenteditable</div>
+            <div class="status" id="status6">Status: Ready</div>
+        </div>
+    </div>
 
-            // Customize Step Component
-            const CustomizeStep = () => (
-                <div className="space-y-6">
-                    <div className="text-center">
-                        <h3 className="text-3xl font-bold text-white mb-2">🎨 Customize Your Assistant</h3>
-                        <p className="text-white/70">Make your AI assistant match your brand and personality</p>
-                    </div>
-                    
-                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                        <div className="grid md:grid-cols-2 gap-8">
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-white font-medium mb-4">🎨 Brand Colors</label>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-white/80 text-sm mb-2">Primary Color</label>
-                                            <div className="flex items-center gap-3">
-                                                <input
-                                                    type="color"
-                                                    value={botConfig.primaryColor}
-                                                    onChange={(e) => setBotConfig({...botConfig, primaryColor: e.target.value})}
-                                                    className="w-12 h-12 rounded-lg border-2 border-white/20"
-                                                />
-                                                <input
-                                                    type="text"
-                                                    value={botConfig.primaryColor}
-                                                    onChange={(e) => setBotConfig({...botConfig, primaryColor: e.target.value})}
-                                                    className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="block text-white/80 text-sm mb-2">Accent Color</label>
-                                            <div className="flex items-center gap-3">
-                                                <input
-                                                    type="color"
-                                                    value={botConfig.accentColor}
-                                                    onChange={(e) => setBotConfig({...botConfig, accentColor: e.target.value})}
-                                                    className="w-12 h-12 rounded-lg border-2 border-white/20"
-                                                />
-                                                <input
-                                                    type="text"
-                                                    value={botConfig.accentColor}
-                                                    onChange={(e) => setBotConfig({...botConfig, accentColor: e.target.value})}
-                                                    className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="bg-white/5 rounded-lg p-4">
-                                    <h4 className="text-white font-medium mb-2">🎭 Personality Settings</h4>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <label className="block text-white/80 text-sm mb-1">Tone</label>
-                                            <select className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none">
-                                                <option value="professional">Professional</option>
-                                                <option value="friendly">Friendly</option>
-                                                <option value="casual">Casual</option>
-                                                <option value="formal">Formal</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-white/80 text-sm mb-1">Response Style</label>
-                                            <select className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none">
-                                                <option value="detailed">Detailed</option>
-                                                <option value="concise">Concise</option>
-                                                <option value="conversational">Conversational</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="space-y-6">
-                                <div>
-                                    <h4 className="text-white font-medium mb-4">👀 Live Preview</h4>
-                                    <div className="bg-gray-900 rounded-xl p-4" style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}20, ${botConfig.accentColor}20)`}}>
-                                        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
-                                            <div 
-                                                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold"
-                                                style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
-                                            >
-                                                {botConfig.name ? botConfig.name[0] : '🤖'}
-                                            </div>
-                                            <div>
-                                                <h5 className="text-white font-medium">{botConfig.name || 'Your Bot'}</h5>
-                                                <p className="text-green-400 text-xs">● Online</p>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-3">
-                                            <div className="bg-white/10 rounded-lg p-3">
-                                                <p className="text-white text-sm">
-                                                    {botConfig.greeting || "Hi! I'm here to help you with any questions. How can I assist you today?"}
-                                                </p>
-                                            </div>
-                                            <div className="flex justify-end">
-                                                <div 
-                                                    className="bg-opacity-90 rounded-lg p-3 text-white text-sm max-w-xs"
-                                                    style={{backgroundColor: botConfig.primaryColor}}
-                                                >
-                                                    What are your hours?
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg p-4 border border-green-500/30">
-                                    <h4 className="text-white font-medium mb-2">✨ Customization Tips</h4>
-                                    <ul className="text-white/80 text-sm space-y-1">
-                                        <li>• Use your brand colors for consistency</li>
-                                        <li>• Match your business personality</li>
-                                        <li>• Test different color combinations</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-
-            // Preview Step Component
-            const PreviewStep = () => {
-                const [messages, setMessages] = useState([
-                    { role: 'bot', content: `Hi! I'm ${botConfig.name || 'your AI assistant'}. ${botConfig.greeting || 'How can I help you today?'}` }
-                ]);
-                const [inputMessage, setInputMessage] = useState('');
-                const [isTyping, setIsTyping] = useState(false);
-                const [messageCount, setMessageCount] = useState(0);
-                const [showEmailCapture, setShowEmailCapture] = useState(false);
-                const [capturedEmail, setCapturedEmail] = useState('');
-                const [emailCollected, setEmailCollected] = useState(false);
-
-                // Use useCallback to prevent function recreation on every render
-                const handleInputChange = React.useCallback((e) => {
-                    e.preventDefault();
-                    setInputMessage(e.target.value);
-                }, []);
-
-                const handleEmailChange = React.useCallback((e) => {
-                    e.preventDefault();
-                    setCapturedEmail(e.target.value);
-                }, []);
-
-                const sendMessage = React.useCallback(async () => {
-                    if (!inputMessage.trim()) return;
-                    
-                    const userMessage = { role: 'user', content: inputMessage };
-                    const newMessageCount = messageCount + 1;
-                    
-                    setMessages(prev => [...prev, userMessage]);
-                    setInputMessage('');
-                    setIsTyping(true);
-                    setMessageCount(newMessageCount);
-                    
-                    // Simulate bot response with lead magnet logic
-                    setTimeout(() => {
-                        let botResponse;
-                        
-                        // After 2-3 messages, offer lead magnet
-                        if (newMessageCount >= 2 && !emailCollected && !showEmailCapture) {
-                            const leadMagnets = [
-                                `Great question! By the way, would you like our free "${botConfig.industry || 'Business'} Success Guide"? It has insider tips and best practices that most businesses don't know. I can email it to you right away!`,
-                                `I'm happy to help with that! Speaking of which, would you like our complimentary "${botConfig.industry || 'Industry'} Insider Report"? It's packed with valuable insights. I can send it to your email instantly!`,
-                                `That's a fantastic question! You seem really interested in improving your business. Would you like our free "${botConfig.industry || 'Business'} Optimization Checklist"? I can email it to you right now!`
-                            ];
-                            botResponse = { 
-                                role: 'bot', 
-                                content: leadMagnets[Math.floor(Math.random() * leadMagnets.length)],
-                                isLeadMagnet: true
-                            };
-                        } else if (showEmailCapture) {
-                            // Handle email collection
-                            botResponse = { 
-                                role: 'bot', 
-                                content: "Perfect! What's your email address and I'll send that valuable guide to you immediately?",
-                                isEmailRequest: true
-                            };
-                        } else {
-                            // Regular responses
-                            const responses = [
-                                "Thanks for your message! I'm here to help with any questions about our services.",
-                                "I'd be happy to assist you with that. Let me provide you with the information you need.",
-                                "That's a great question! Based on the training data provided, here's what I can tell you...",
-                                "I understand what you're looking for. Let me help you with that right away.",
-                                "Excellent! I'm glad I could help you with that information."
-                            ];
-                            botResponse = { 
-                                role: 'bot', 
-                                content: responses[Math.floor(Math.random() * responses.length)]
-                            };
-                        }
-                        
-                        setMessages(prev => [...prev, botResponse]);
-                        setIsTyping(false);
-                    }, 1500);
-                }, [inputMessage, messageCount, emailCollected, showEmailCapture, botConfig.industry]);
-
-                const handleLeadMagnetResponse = React.useCallback((accepted) => {
-                    const userResponse = { 
-                        role: 'user', 
-                        content: accepted ? "Yes, I'd love that!" : "No thanks, maybe later" 
-                    };
-                    setMessages(prev => [...prev, userResponse]);
-                    
-                    if (accepted) {
-                        setShowEmailCapture(true);
-                        setTimeout(() => {
-                            const botResponse = { 
-                                role: 'bot', 
-                                content: "Awesome! What's your email address and I'll send that valuable guide over right away?",
-                                isEmailRequest: true
-                            };
-                            setMessages(prev => [...prev, botResponse]);
-                        }, 1000);
-                    } else {
-                        setTimeout(() => {
-                            const botResponse = { 
-                                role: 'bot', 
-                                content: "No problem at all! The offer stands anytime. How else can I help you today?"
-                            };
-                            setMessages(prev => [...prev, botResponse]);
-                        }, 1000);
-                    }
-                }, []);
-
-                const handleEmailSubmit = React.useCallback(() => {
-                    if (!capturedEmail.includes('@')) return;
-                    
-                    const userResponse = { role: 'user', content: capturedEmail };
-                    setMessages(prev => [...prev, userResponse]);
-                    setCapturedEmail('');
-                    setEmailCollected(true);
-                    setShowEmailCapture(false);
-                    
-                    // Store email (in real app, this would save to database)
-                    console.log('Email captured:', capturedEmail);
-                    
-                    setTimeout(() => {
-                        const botResponse = { 
-                            role: 'bot', 
-                            content: "Perfect! I've sent the guide to your email. You should receive it within the next few minutes. Is there anything else I can help you with today?",
-                            isSuccess: true
-                        };
-                        setMessages(prev => [...prev, botResponse]);
-                    }, 1000);
-                }, [capturedEmail]);
-
-                return (
-                    <div className="space-y-6">
-                        <div className="text-center">
-                            <h3 className="text-3xl font-bold text-white mb-2">🚀 Deploy Your Bot</h3>
-                            <p className="text-white/70">Choose how you want to deploy your bot</p>
-                        </div>
-                        
-                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                            {/* Deployment Options */}
-                            <div className="grid md:grid-cols-3 gap-4 mb-8">
-                                <button
-                                    onClick={() => setSelectedDeployment('embed')}
-                                    className={`p-4 rounded-xl border-2 transition-all ${
-                                        selectedDeployment === 'embed'
-                                            ? 'border-blue-500 bg-blue-500/20'
-                                            : 'border-white/20 bg-white/5 hover:border-white/40'
-                                    }`}
-                                >
-                                    <div className="text-2xl mb-2">🌐</div>
-                                    <h4 className="text-white font-semibold">Website Embed</h4>
-                                    <p className="text-white/60 text-sm">Add to any website</p>
-                                </button>
-                                <button
-                                    onClick={() => setSelectedDeployment('qr')}
-                                    className={`p-4 rounded-xl border-2 transition-all ${
-                                        selectedDeployment === 'qr'
-                                            ? 'border-blue-500 bg-blue-500/20'
-                                            : 'border-white/20 bg-white/5 hover:border-white/40'
-                                    }`}
-                                >
-                                    <div className="text-2xl mb-2">📱</div>
-                                    <h4 className="text-white font-semibold">QR Code</h4>
-                                    <p className="text-white/60 text-sm">Print & share anywhere</p>
-                                </button>
-                                <button
-                                    onClick={() => setSelectedDeployment('api')}
-                                    className={`p-4 rounded-xl border-2 transition-all ${
-                                        selectedDeployment === 'api'
-                                            ? 'border-blue-500 bg-blue-500/20'
-                                            : 'border-white/20 bg-white/5 hover:border-white/40'
-                                    }`}
-                                >
-                                    <div className="text-2xl mb-2">⚡</div>
-                                    <h4 className="text-white font-semibold">API Integration</h4>
-                                    <p className="text-white/60 text-sm">Custom integrations</p>
-                                </button>
-                            </div>
-
-                            {/* Deployment Content */}
-                            {selectedDeployment === 'embed' && (
-                                <div className="space-y-6">
-                                    <div className="grid lg:grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-4">Embed Code</h4>
-                                            <div className="bg-gray-900 rounded-lg p-4 mb-4">
-                                                <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap">
-                                                    {embedCode}
-                                                </pre>
-                                            </div>
-                                            <button
-                                                onClick={() => navigator.clipboard.writeText(embedCode)}
-                                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                                            >
-                                                📋 Copy Code
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-4">Preview</h4>
-                                            <div className="bg-gray-100 rounded-lg p-4 min-h-[300px] flex items-center justify-center">
-                                                <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-sm">
-                                                    <div className="flex items-center gap-2 mb-3 pb-2 border-b">
-                                                        <div 
-                                                            className="w-6 h-6 rounded-full"
-                                                            style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
-                                                        ></div>
-                                                        <span className="font-medium text-gray-800">{botConfig.name || 'Your Bot'}</span>
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <div className="bg-gray-100 rounded-lg p-2 text-sm text-gray-600">
-                                                            {botConfig.greeting || 'Hello! How can I help you?'}
-                                                        </div>
-                                                        <input 
-                                                            type="text" 
-                                                            placeholder="Type a message..." 
-                                                            className="w-full border rounded-lg px-3 py-2 text-sm"
-                                                            disabled
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {selectedDeployment === 'qr' && (
-                                <div className="text-center space-y-6">
-                                    <div className="grid lg:grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-4">QR Code</h4>
-                                            <div className="bg-white rounded-lg p-6 inline-block">
-                                                <img src={qrCode} alt="Bot QR Code" className="w-48 h-48" />
-                                            </div>
-                                            <div className="mt-4 space-x-4">
-                                                <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                                                    📄 Download PNG
-                                                </button>
-                                                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                                    📋 Copy Link
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="text-left">
-                                            <h4 className="text-xl font-semibold text-white mb-4">How to Use</h4>
-                                            <div className="space-y-4">
-                                                <div className="flex items-start gap-3">
-                                                    <span className="text-blue-400 font-bold">1.</span>
-                                                    <div>
-                                                        <p className="text-white font-medium">Download QR Code</p>
-                                                        <p className="text-white/60 text-sm">Save the QR code image to your device</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-start gap-3">
-                                                    <span className="text-blue-400 font-bold">2.</span>
-                                                    <div>
-                                                        <p className="text-white font-medium">Print or Display</p>
-                                                        <p className="text-white/60 text-sm">Add to business cards, flyers, or digital displays</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-start gap-3">
-                                                    <span className="text-blue-400 font-bold">3.</span>
-                                                    <div>
-                                                        <p className="text-white font-medium">Customers Scan</p>
-                                                        <p className="text-white/60 text-sm">They'll be taken directly to your bot</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="mt-6 bg-white/5 rounded-lg p-4">
-                                                <p className="text-white font-medium mb-2">Direct Link:</p>
-                                                <p className="text-blue-400 text-sm break-all">{deploymentUrl}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {selectedDeployment === 'api' && (
-                                <div className="space-y-6">
-                                    <div className="grid lg:grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-4">API Integration</h4>
-                                            <div className="bg-gray-900 rounded-lg p-4 mb-4">
-                                                <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap">
-{`// API Integration Example
-fetch('/api/chat', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    message: 'Hello from my website!',
-    botConfig: ${JSON.stringify(botConfig, null, 2)}
-  })
-});`}
-                                                </pre>
-                                            </div>
-                                            <button
-                                                onClick={() => navigator.clipboard.writeText(`// API Integration code here`)}
-                                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                                            >
-                                                📋 Copy Code
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-4">API Documentation</h4>
-                                            <div className="space-y-4">
-                                                <div className="bg-white/5 rounded-lg p-4">
-                                                    <h5 className="text-white font-medium mb-2">Endpoints</h5>
-                                                    <ul className="text-white/70 text-sm space-y-1">
-                                                        <li>• POST /api/chat - Send message</li>
-                                                        <li>• GET /api/config - Get bot config</li>
-                                                        <li>• POST /api/reset - Reset conversation</li>
-                                                    </ul>
-                                                </div>
-                                                
-                                                <div className="bg-white/5 rounded-lg p-4">
-                                                    <h5 className="text-white font-medium mb-2">Authentication</h5>
-                                                    <p className="text-white/70 text-sm">API calls are authenticated automatically</p>
-                                                </div>
-                                                
-                                                <div className="bg-white/5 rounded-lg p-4">
-                                                    <h5 className="text-white font-medium mb-2">Rate Limits</h5>
-                                                    <p className="text-white/70 text-sm">1000 requests per hour</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Success Message */}
-                            <div className="mt-8 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl p-6 border border-green-500/30">
-                                <div className="text-center">
-                                    <div className="text-4xl mb-4">🎉</div>
-                                    <h4 className="text-2xl font-bold text-white mb-2">Congratulations!</h4>
-                                    <p className="text-white/80 mb-4">Your {botConfig.name || 'AI bot'} is now ready to help your customers!</p>
-                                    
-                                    <div className="grid md:grid-cols-3 gap-4 mt-6">
-                                        <div className="bg-white/10 rounded-lg p-4">
-                                            <div className="text-2xl mb-2">📊</div>
-                                            <h5 className="text-white font-medium">Analytics</h5>
-                                            <p className="text-white/60 text-sm">Track conversations & insights</p>
-                                        </div>
-                                        <div className="bg-white/10 rounded-lg p-4">
-                                            <div className="text-2xl mb-2">🔧</div>
-                                            <h5 className="text-white font-medium">Customize</h5>
-                                            <p className="text-white/60 text-sm">Update anytime in dashboard</p>
-                                        </div>
-                                        <div className="bg-white/10 rounded-lg p-4">
-                                            <div className="text-2xl mb-2">💬</div>
-                                            <h5 className="text-white font-medium">Support</h5>
-                                            <p className="text-white/60 text-sm">24/7 technical assistance</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <button 
-                                        className="mt-6 px-8 py-3 rounded-xl font-medium text-white transition-all transform hover:scale-105"
-                                        style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
-                                    >
-                                        🚀 Go to Dashboard
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            };
-
-            // Main render function
-            return (
-                <div className="gradient-bg min-h-screen">
-                    {/* Header */}
-                    <div className="container mx-auto px-4 py-8">
-                        <div className="text-center mb-12">
-                            <div className="floating-animation inline-block">
-                                <h1 className="text-5xl font-bold text-white mb-4">
-                                    🤖 <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BotLight AI</span>
-                                </h1>
-                            </div>
-                            <p className="text-xl text-white/80 mb-8">Create Professional AI Assistants in Minutes</p>
-                            
-                            {/* Progress Indicator */}
-                            <div className="flex justify-center items-center space-x-4 mb-8">
-                                {steps.map((step) => (
-                                    <div key={step.number} className="flex items-center">
-                                        <div 
-                                            className={`step-indicator w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 ${
-                                                currentStep === step.number 
-                                                    ? 'active border-white' 
-                                                    : currentStep > step.number 
-                                                        ? 'completed border-green-400' 
-                                                        : 'border-white/30 bg-white/10'
-                                            }`}
-                                        >
-                                            {currentStep > step.number ? '✓' : step.number}
-                                        </div>
-                                        <div className="ml-2 text-left hidden md:block">
-                                            <div className="text-white text-sm font-medium">{step.title}</div>
-                                        </div>
-                                        {step.number < 5 && (
-                                            <div className="w-8 h-0.5 bg-white/30 mx-4 hidden md:block"></div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Step Content */}
-                        <div className="max-w-6xl mx-auto">
-                            {currentStep === 1 && <SetupStep />}
-                            {currentStep === 2 && <TrainStep />}
-                            {currentStep === 3 && <CustomizeStep />}
-                            {currentStep === 4 && <PreviewStep />}
-                            {currentStep === 5 && <DeployStep />}
-                        </div>
-
-                        {/* Navigation */}
-                        <div className="flex justify-between items-center mt-12 max-w-6xl mx-auto">
-                            <button
-                                onClick={prevStep}
-                                disabled={currentStep === 1}
-                                className={`px-6 py-3 rounded-xl font-medium transition-all ${
-                                    currentStep === 1
-                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                        : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
-                                }`}
-                            >
-                                ← Previous
-                            </button>
-                            
-                            <div className="text-white/60">
-                                Step {currentStep} of {steps.length}
-                            </div>
-                            
-                            <button
-                                onClick={nextStep}
-                                disabled={currentStep === 5}
-                                className={`px-6 py-3 rounded-xl font-medium transition-all ${
-                                    currentStep === 5
-                                        ? 'bg-green-600 text-white cursor-default'
-                                        : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
-                                }`}
-                            >
-                                {currentStep === 5 ? '🎉 Complete!' : 'Next →'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        // Render the app
-        ReactDOM.render(<BotLightAI />, document.getElementById('root'));
+    <script>
+        // Test 2: Simple JavaScript
+        document.getElementById('test2').addEventListener('input', function(e) {
+            document.getElementById('status2').textContent = `Status: Typed "${e.target.value}"`;
+        });
+        
+        // Test 3: Event handling
+        const test3Input = document.getElementById('test3');
+        test3Input.addEventListener('input', function(e) {
+            document.getElementById('status3').textContent = `Status: Input event - "${e.target.value}"`;
+        });
+        
+        test3Input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('status3').textContent = `Status: Enter pressed - "${e.target.value}"`;
+            }
+        });
+        
+        // Test 4: Simple chat
+        let messageCount = 0;
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const messages = document.getElementById('messages');
+            const message = input.value.trim();
+            
+            if (message) {
+                messageCount++;
+                messages.innerHTML += `<div class="message">You: ${message}</div>`;
+                messages.innerHTML += `<div class="message">Bot: Thanks for message #${messageCount}!</div>`;
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+                document.getElementById('status4').textContent = `Status: Sent ${messageCount} messages`;
+            }
+        }
+        
+        // Enter key for chat
+        document.getElementById('chatInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Test 5: Textarea
+        document.getElementById('test5').addEventListener('input', function(e) {
+            document.getElementById('status5').textContent = `Status: Textarea - "${e.target.value.substring(0, 50)}..."`;
+        });
+        
+        // Test 6: ContentEditable
+        document.getElementById('test6').addEventListener('input', function(e) {
+            document.getElementById('status6').textContent = `Status: ContentEditable - "${e.target.textContent.substring(0, 50)}..."`;
+        });
+        
+        // Global test - detect what's happening
+        console.log('🔧 Debug mode loaded');
+        console.log('User Agent:', navigator.userAgent);
+        console.log('Platform:', navigator.platform);
     </script>
 </body>
 </html>
-                            <h3 className="text-3xl font-bold text-white mb-2">✨ Preview Your Bot</h3>
-                            <p className="text-white/70">Test your bot before going live!</p>
-                        </div>
-                        
-                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                            <div className="grid lg:grid-cols-2 gap-8">
-                                {/* Bot Preview */}
-                                <div className="space-y-4">
-                                    <h4 className="text-xl font-semibold text-white flex items-center gap-2">
-                                        <span className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
-                                        Live Preview
-                                    </h4>
-                                    <div className="bg-gray-900 rounded-xl p-4 min-h-[400px] flex flex-col">
-                                        {/* Chat Header */}
-                                        <div className="flex items-center gap-3 p-3 border-b border-gray-700">
-                                            <div 
-                                                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                                                style={{background: `linear-gradient(135deg, ${botConfig.primaryColor}, ${botConfig.accentColor})`}}
-                                            >
-                                                {botConfig.name ? botConfig.name[0] : '🤖'}
-                                            </div>
-                                            <div>
-                                                <h5 className="text-white font-medium">{botConfig.name || 'Your Bot'}</h5>
-                                                <p className="text-green-400 text-xs">Online</p>
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Messages */}
-                                        <div className="flex-1 p-3 space-y-3 overflow-y-auto max-h-80">
-                                            {messages.map((msg, idx) => (
-                                                <div key={idx} className={`flex chat-message ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                                    <div className={`max-w-xs px-4 py-2 rounded-2xl ${
-                                                        msg.role === 'user' 
-                                                            ? 'text-white' 
-                                                            : msg.isSuccess
-                                                                ? 'bg-green-600 text-white'
-                                                                : 'bg-gray-700 text-white'
-                                                    }`} style={msg.role === 'user' ? {backgroundColor: botConfig.primaryColor} : {}}>
-                                                        {msg.content}
-                                                        
-                                                        {/* Lead Magnet Buttons */}
-                                                        {msg.isLeadMagnet && (
-                                                            <div className="mt-3 space-x-2">
-                                                                <button
-                                                                    onClick={() => handleLeadMagnetResponse(true)}
-                                                                    className="bg-green-600 text-white px-3 py-1 rounded-full text-xs hover:bg-green-700 transition-colors"
-                                                                >
-                                                                    Yes, send it!
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => handleLeadMagnetResponse(false)}
-                                                                    className="bg-gray-600 text-white px-3 py-1 rounded-full text-xs hover:bg-gray-700 transition-colors"
-                                                                >
-                                                                    No thanks
-                                                                </button>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            {isTyping && (
-                                                <div className="flex justify-start">
-                                                    <div className="bg-gray-700 text-white px-4 py-2 rounded-2xl">
-                                                        <div className="flex space-x-1">
-                                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                        
-                                        {/* Input */}
-                                        <div className="p-3 border-t border-gray-700">
-                                            {showEmailCapture ? (
-                                                <div className="flex gap-2">
-                                                    <div className="flex-1 relative">
-                                                        <div 
-                                                            contentEditable="true"
-                                                            className="w-full bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none min-h-[40px] flex items-center"
-                                                            style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}
-                                                            onKeyDown={(e) => {
-                                                                if (e.key === 'Enter' && !e.shiftKey) {
-                                                                    e.preventDefault();
-                                                                    const email = e.target.textContent.trim();
-                                                                    if (email.includes('@')) {
-                                                                        setCapturedEmail(email);
-                                                                        const userResponse = { role: 'user', content: email };
-                                                                        setMessages(prev => [...prev, userResponse]);
-                                                                        setCapturedEmail('');
-                                                                        setEmailCollected(true);
-                                                                        setShowEmailCapture(false);
-                                                                        e.target.textContent = '';
-                                                                        console.log('Email captured:', email);
-                                                                        setTimeout(() => {
-                                                                            const botResponse = { 
-                                                                                role: 'bot', 
-                                                                                content: "Perfect! I've sent the guide to your email. You should receive it within the next few minutes. Is there anything else I can help you with today?",
-                                                                                isSuccess: true
-                                                                            };
-                                                                            setMessages(prev => [...prev, botResponse]);
-                                                                        }, 1000);
-                                                                    }
-                                                                }
-                                                            }}
-                                                            data-placeholder="Enter your email address..."
-                                                        ></div>
-                                                        <style jsx>{`
-                                                            [contenteditable]:empty:before {
-                                                                content: attr(data-placeholder);
-                                                                color: rgba(255, 255, 255, 0.5);
-                                                                pointer-events: none;
-                                                            }
-                                                        `}</style>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => {
-                                                            const emailDiv = document.querySelector('[contenteditable="true"]');
-                                                            const email = emailDiv.textContent.trim();
-                                                            if (email.includes('@')) {
-                                                                setCapturedEmail(email);
-                                                                const userResponse = { role: 'user', content: email };
-                                                                setMessages(prev => [...prev, userResponse]);
-                                                                setCapturedEmail('');
-                                                                setEmailCollected(true);
-                                                                setShowEmailCapture(false);
-                                                                emailDiv.textContent = '';
-                                                                console.log('Email captured:', email);
-                                                                setTimeout(() => {
-                                                                    const botResponse = { 
-                                                                        role: 'bot', 
-                                                                        content: "Perfect! I've sent the guide to your email. You should receive it within the next few minutes. Is there anything else I can help you with today?",
-                                                                        isSuccess: true
-                                                                    };
-                                                                    setMessages(prev => [...prev, botResponse]);
-                                                                }, 1000);
-                                                            }
-                                                        }}
-                                                        className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors"
-                                                    >
-                                                        Send Guide
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <div className="flex gap-2">
-                                                    <div className="flex-1 relative">
-                                                        <div 
-                                                            contentEditable="true"
-                                                            className="w-full bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none min-h-[40px] flex items-center"
-                                                            style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}
-                                                            onKeyDown={(e) => {
-                                                                if (e.key === 'Enter' && !e.shiftKey) {
-                                                                    e.preventDefault();
-                                                                    const message = e.target.textContent.trim();
-                                                                    if (message) {
-                                                                        setInputMessage(message);
-                                                                        const userMessage = { role: 'user', content: message };
-                                                                        const newMessageCount = messageCount + 1;
-                                                                        
-                                                                        setMessages(prev => [...prev, userMessage]);
-                                                                        setInputMessage('');
-                                                                        setIsTyping(true);
-                                                                        setMessageCount(newMessageCount);
-                                                                        e.target.textContent = '';
-                                                                        
-                                                                        setTimeout(() => {
-                                                                            let botResponse;
-                                                                            
-                                                                            if (newMessageCount >= 2 && !emailCollected && !showEmailCapture) {
-                                                                                const leadMagnets = [
-                                                                                    `Great question! By the way, would you like our free "${botConfig.industry || 'Business'} Success Guide"? It has insider tips and best practices that most businesses don't know. I can email it to you right away!`,
-                                                                                    `I'm happy to help with that! Speaking of which, would you like our complimentary "${botConfig.industry || 'Industry'} Insider Report"? It's packed with valuable insights. I can send it to your email instantly!`,
-                                                                                    `That's a fantastic question! You seem really interested in improving your business. Would you like our free "${botConfig.industry || 'Business'} Optimization Checklist"? I can email it to you right now!`
-                                                                                ];
-                                                                                botResponse = { 
-                                                                                    role: 'bot', 
-                                                                                    content: leadMagnets[Math.floor(Math.random() * leadMagnets.length)],
-                                                                                    isLeadMagnet: true
-                                                                                };
-                                                                            } else {
-                                                                                const responses = [
-                                                                                    "Thanks for your message! I'm here to help with any questions about our services.",
-                                                                                    "I'd be happy to assist you with that. Let me provide you with the information you need.",
-                                                                                    "That's a great question! Based on the training data provided, here's what I can tell you...",
-                                                                                    "I understand what you're looking for. Let me help you with that right away.",
-                                                                                    "Excellent! I'm glad I could help you with that information."
-                                                                                ];
-                                                                                botResponse = { 
-                                                                                    role: 'bot', 
-                                                                                    content: responses[Math.floor(Math.random() * responses.length)]
-                                                                                };
-                                                                            }
-                                                                            
-                                                                            setMessages(prev => [...prev, botResponse]);
-                                                                            setIsTyping(false);
-                                                                        }, 1500);
-                                                                    }
-                                                                }
-                                                            }}
-                                                            data-placeholder="Type a message..."
-                                                        ></div>
-                                                        <style jsx>{`
-                                                            [contenteditable]:empty:before {
-                                                                content: attr(data-placeholder);
-                                                                color: rgba(255, 255, 255, 0.5);
-                                                                pointer-events: none;
-                                                            }
-                                                        `}</style>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => {
-                                                            const messageDiv = document.querySelector('[contenteditable="true"]');
-                                                            const message = messageDiv.textContent.trim();
-                                                            if (message) {
-                                                                setInputMessage(message);
-                                                                const userMessage = { role: 'user', content: message };
-                                                                const newMessageCount = messageCount + 1;
-                                                                
-                                                                setMessages(prev => [...prev, userMessage]);
-                                                                setInputMessage('');
-                                                                setIsTyping(true);
-                                                                setMessageCount(newMessageCount);
-                                                                messageDiv.textContent = '';
-                                                                
-                                                                setTimeout(() => {
-                                                                    let botResponse;
-                                                                    
-                                                                    if (newMessageCount >= 2 && !emailCollected && !showEmailCapture) {
-                                                                        const leadMagnets = [
-                                                                            `Great question! By the way, would you like our free "${botConfig.industry || 'Business'} Success Guide"? It has insider tips and best practices that most businesses don't know. I can email it to you right away!`,
-                                                                            `I'm happy to help with that! Speaking of which, would you like our complimentary "${botConfig.industry || 'Industry'} Insider Report"? It's packed with valuable insights. I can send it to your email instantly!`,
-                                                                            `That's a fantastic question! You seem really interested in improving your business. Would you like our free "${botConfig.industry || 'Business'} Optimization Checklist"? I can email it to you right now!`
-                                                                        ];
-                                                                        botResponse = { 
-                                                                            role: 'bot', 
-                                                                            content: leadMagnets[Math.floor(Math.random() * leadMagnets.length)],
-                                                                            isLeadMagnet: true
-                                                                        };
-                                                                    } else {
-                                                                        const responses = [
-                                                                            "Thanks for your message! I'm here to help with any questions about our services.",
-                                                                            "I'd be happy to assist you with that. Let me provide you with the information you need.",
-                                                                            "That's a great question! Based on the training data provided, here's what I can tell you...",
-                                                                            "I understand what you're looking for. Let me help you with that right away.",
-                                                                            "Excellent! I'm glad I could help you with that information."
-                                                                        ];
-                                                                        botResponse = { 
-                                                                            role: 'bot', 
-                                                                            content: responses[Math.floor(Math.random() * responses.length)]
-                                                                        };
-                                                                    }
-                                                                    
-                                                                    setMessages(prev => [...prev, botResponse]);
-                                                                    setIsTyping(false);
-                                                                }, 1500);
-                                                            }
-                                                        }}
-                                                        style={{backgroundColor: botConfig.primaryColor}}
-                                                        className="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
-                                                    >
-                                                        Send
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                {/* Configuration Summary */}
-                                <div className="space-y-4">
-                                    <h4 className="text-xl font-semibold text-white">Configuration Summary</h4>
-                                    <div className="space-y-3">
-                                        <div className="bg-white/5 rounded-lg p-4">
-                                            <h5 className="text-white font-medium mb-2">Bot Details</h5>
-                                            <p className="text-white/70 text-sm">Name: {botConfig.name || 'Not set'}</p>
-                                            <p className="text-white/70 text-sm">Industry: {botConfig.industry || 'Not set'}</p>
-                                            <p className="text-white/70 text-sm">Language: {botConfig.language}</p>
-                                        </div>
-                                        
-                                        <div className="bg-white/5 rounded-lg p-4">
-                                            <h5 className="text-white font-medium mb-2">Greeting Message</h5>
-                                            <p className="text-white/70 text-sm">{botConfig.greeting || 'Not set'}</p>
-                                        </div>
-                                        
-                                        <div className="bg-white/5 rounded-lg p-4">
-                                            <h5 className="text-white font-medium mb-2">Training Data</h5>
-                                            <p className="text-white/70 text-sm">
-                                                {botConfig.trainingData ? `${botConfig.trainingData.split(' ').length} words processed` : 'No training data provided'}
-                                            </p>
-                                        </div>
-                                        
-                                        <div className="bg-white/5 rounded-lg p-4">
-                                            <h5 className="text-white font-medium mb-2">Customization</h5>
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <div className="w-4 h-4 rounded-full" style={{backgroundColor: botConfig.primaryColor}}></div>
-                                                <span className="text-white/70 text-sm">Primary: {botConfig.primaryColor}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-4 h-4 rounded-full" style={{backgroundColor: botConfig.accentColor}}></div>
-                                                <span className="text-white/70 text-sm">Accent: {botConfig.accentColor}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg p-4 border border-green-500/30">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className="text-green-400">✅</span>
-                                            <h5 className="text-white font-medium">Ready to Deploy!</h5>
-                                        </div>
-                                        <p className="text-white/70 text-sm">Your bot is configured and ready to go live.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            };
-
-            // Deploy Step Component
-            const DeployStep = () => {
-                const [selectedDeployment, setSelectedDeployment] = useState('embed');
-                const [deploymentUrl, setDeploymentUrl] = useState('');
-                const [qrCode, setQrCode] = useState('');
-                
-                useEffect(() => {
-                    // Generate deployment URL and QR code
-                    const baseUrl = 'https://botlight.ai/chat/';
-                    const botId = Math.random().toString(36).substr(2, 9);
-                    const url = `${baseUrl}${botId}`;
-                    setDeploymentUrl(url);
-                    
-                    // Generate QR code placeholder
-                    setQrCode(`data:image/svg+xml,${encodeURIComponent(`
-                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-                            <rect width="200" height="200" fill="white"/>
-                            <rect x="20" y="20" width="160" height="160" fill="black"/>
-                            <rect x="40" y="40" width="120" height="120" fill="white"/>
-                            <rect x="60" y="60" width="80" height="80" fill="black"/>
-                            <rect x="80" y="80" width="40" height="40" fill="white"/>
-                            <text x="100" y="195" text-anchor="middle" font-family="Arial" font-size="10" fill="black">BotLight QR</text>
-                        </svg>
-                    `)}`);
-                }, []);
-
-                const embedCode = `<iframe
-  src="${deploymentUrl}"
-  width="400"
-  height="600"
-  frameborder="0"
-  style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
-></iframe>`;
-
-                return (
-                    <div className="space-y-6">
-                        <div className="text-center">
