@@ -3,216 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Test - Debug Version</title>
+    <title>🤖 BotLight AI - Professional Bot Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background: #1a1a1a;
-            color: white;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
         }
         
-        .test-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 10px;
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .input-test {
-            margin: 20px 0;
-            padding: 20px;
-            background: #333;
-            border-radius: 8px;
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
         }
         
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background: #444;
-            color: white;
-            border: 1px solid #666;
-            border-radius: 5px;
-            font-size: 16px;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
         
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #0066cc;
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
         
-        .chat-container {
-            background: #444;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+        .step-indicator {
+            transition: all 0.3s ease;
         }
         
-        .messages {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid #666;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #555;
+        .step-indicator.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            transform: scale(1.1);
         }
         
-        .message {
-            margin: 5px 0;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background: #666;
+        .step-indicator.completed {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
         }
         
-        .input-row {
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .lead-magnet-buttons {
+            margin-top: 10px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
         
-        .input-row input {
-            flex: 1;
-            margin: 0;
-        }
-        
-        button {
-            padding: 10px 20px;
-            background: #0066cc;
-            color: white;
+        .lead-magnet-buttons button {
+            padding: 4px 12px;
+            border-radius: 20px;
             border: none;
-            border-radius: 5px;
+            color: white;
+            font-size: 12px;
             cursor: pointer;
+            transition: all 0.2s;
         }
         
-        button:hover {
-            background: #0052a3;
+        .accept-btn {
+            background: #10b981;
         }
         
-        .status {
-            margin: 10px 0;
-            padding: 10px;
-            background: #0066cc22;
-            border-radius: 5px;
-            border-left: 3px solid #0066cc;
+        .accept-btn:hover {
+            background: #059669;
+        }
+        
+        .decline-btn {
+            background: #6b7280;
+        }
+        
+        .decline-btn:hover {
+            background: #4b5563;
         }
     </style>
 </head>
 <body>
-    <div class="test-container">
-        <h1>🔧 Input Testing - Debug Mode</h1>
-        <p>Let's test different input methods to find what works:</p>
-        
-        <!-- Test 1: Pure HTML -->
-        <div class="input-test">
-            <h3>Test 1: Pure HTML Input</h3>
-            <input type="text" placeholder="Type here - pure HTML, no JavaScript" id="test1">
-            <div class="status" id="status1">Status: Ready</div>
-        </div>
-        
-        <!-- Test 2: Simple JavaScript -->
-        <div class="input-test">
-            <h3>Test 2: Simple JavaScript</h3>
-            <input type="text" placeholder="Type here - with simple JS" id="test2">
-            <div class="status" id="status2">Status: Ready</div>
-        </div>
-        
-        <!-- Test 3: Event Handling -->
-        <div class="input-test">
-            <h3>Test 3: With Event Handling</h3>
-            <input type="text" placeholder="Type here - with events" id="test3">
-            <div class="status" id="status3">Status: Ready</div>
-        </div>
-        
-        <!-- Test 4: Simple Chat -->
-        <div class="input-test">
-            <h3>Test 4: Simple Chat Interface</h3>
-            <div class="chat-container">
-                <div class="messages" id="messages">
-                    <div class="message">Bot: Hi! Type a message to test.</div>
+    <div class="gradient-bg min-h-screen">
+        <!-- Header -->
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center mb-12">
+                <div class="floating-animation inline-block">
+                    <h1 class="text-5xl font-bold text-white mb-4">
+                        🤖 <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BotLight AI</span>
+                    </h1>
                 </div>
-                <div class="input-row">
-                    <input type="text" placeholder="Type your message..." id="chatInput">
-                    <button onclick="sendMessage()">Send</button>
+                <p class="text-xl text-white/80 mb-8">Create Professional AI Assistants in Minutes</p>
+                
+                <!-- Progress Indicator -->
+                <div class="flex justify-center items-center space-x-4 mb-8" id="progress-indicator">
+                    <div class="flex items-center">
+                        <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 active border-white" data-step="1">1</div>
+                        <div class="ml-2 text-left hidden md:block">
+                            <div class="text-white text-sm font-medium">Setup</div>
+                        </div>
+                        <div class="w-8 h-0.5 bg-white/30 mx-4 hidden md:block"></div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white/30 bg-white/10" data-step="2">2</div>
+                        <div class="ml-2 text-left hidden md:block">
+                            <div class="text-white text-sm font-medium">Train</div>
+                        </div>
+                        <div class="w-8 h-0.5 bg-white/30 mx-4 hidden md:block"></div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white/30 bg-white/10" data-step="3">3</div>
+                        <div class="ml-2 text-left hidden md:block">
+                            <div class="text-white text-sm font-medium">Customize</div>
+                        </div>
+                        <div class="w-8 h-0.5 bg-white/30 mx-4 hidden md:block"></div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white/30 bg-white/10" data-step="4">4</div>
+                        <div class="ml-2 text-left hidden md:block">
+                            <div class="text-white text-sm font-medium">Preview</div>
+                        </div>
+                        <div class="w-8 h-0.5 bg-white/30 mx-4 hidden md:block"></div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white/30 bg-white/10" data-step="5">5</div>
+                        <div class="ml-2 text-left hidden md:block">
+                            <div class="text-white text-sm font-medium">Deploy</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="status" id="status4">Status: Ready</div>
-        </div>
-        
-        <!-- Test 5: Textarea -->
-        <div class="input-test">
-            <h3>Test 5: Textarea Test</h3>
-            <textarea placeholder="Type here - textarea test" id="test5" rows="3"></textarea>
-            <div class="status" id="status5">Status: Ready</div>
-        </div>
-        
-        <!-- Test 6: ContentEditable -->
-        <div class="input-test">
-            <h3>Test 6: ContentEditable</h3>
-            <div contenteditable="true" 
-                 style="border: 1px solid #666; padding: 10px; background: #444; border-radius: 5px; min-height: 40px;"
-                 id="test6">Type here - contenteditable</div>
-            <div class="status" id="status6">Status: Ready</div>
-        </div>
-    </div>
 
-    <script>
-        // Test 2: Simple JavaScript
-        document.getElementById('test2').addEventListener('input', function(e) {
-            document.getElementById('status2').textContent = `Status: Typed "${e.target.value}"`;
-        });
-        
-        // Test 3: Event handling
-        const test3Input = document.getElementById('test3');
-        test3Input.addEventListener('input', function(e) {
-            document.getElementById('status3').textContent = `Status: Input event - "${e.target.value}"`;
-        });
-        
-        test3Input.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('status3').textContent = `Status: Enter pressed - "${e.target.value}"`;
-            }
-        });
-        
-        // Test 4: Simple chat
-        let messageCount = 0;
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const messages = document.getElementById('messages');
-            const message = input.value.trim();
-            
-            if (message) {
-                messageCount++;
-                messages.innerHTML += `<div class="message">You: ${message}</div>`;
-                messages.innerHTML += `<div class="message">Bot: Thanks for message #${messageCount}!</div>`;
-                input.value = '';
-                messages.scrollTop = messages.scrollHeight;
-                document.getElementById('status4').textContent = `Status: Sent ${messageCount} messages`;
-            }
-        }
-        
-        // Enter key for chat
-        document.getElementById('chatInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-        
-        // Test 5: Textarea
-        document.getElementById('test5').addEventListener('input', function(e) {
-            document.getElementById('status5').textContent = `Status: Textarea - "${e.target.value.substring(0, 50)}..."`;
-        });
-        
-        // Test 6: ContentEditable
-        document.getElementById('test6').addEventListener('input', function(e) {
-            document.getElementById('status6').textContent = `Status: ContentEditable - "${e.target.textContent.substring(0, 50)}..."`;
-        });
-        
-        // Global test - detect what's happening
-        console.log('🔧 Debug mode loaded');
-        console.log('User Agent:', navigator.userAgent);
-        console.log('Platform:', navigator.platform);
-    </script>
-</body>
-</html>
+            <!-- Step Content -->
+            <div class="max-w-6xl mx-auto">
+                <!-- Step 1: Setup -->
+                <div id="step-1" class="step-content">
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <h3 class="text-3xl font-bold text-white mb-2">🏢 Tell Us About Your Business</h3>
+                            <p class="text-white/70">Help us understand your business so we can create the perfect AI assistant</p>
+                        </div>
+                        
+                        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-white font-medium mb-2">🤖 Bot Name</label>
+                                        <input
+                                            type="text"
+                                            id="bot-name"
+                                            placeholder="e.g., Sarah, TechSupport Bot, Restaurant Helper"
+                                            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none"
+                                        />
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-white font-medium mb-2">🏭 Industry</label>
+                                        <select
+                                            id="bot-industry"
+                                            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                        >
+                                            <option value="">Select your industry</option>
+                                            <option value="Restaurant">🍽️ Restaurant</option>
+                                            <option value="Retail">🛍️ Retail</option>
+                                            <option value="Healthcare">🏥 Healthcare</option>
+                                            <option value="Education">🎓 Education</option>
+                                            <option value="Technology">💻 Technology</option>
+                                            <option value="Finance">💰 Finance</option>
+                                            <option value="Real Estate">🏠 Real Estate</option>
+                                            <option value="Other">🔧 Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-white font-medium mb-2">🌍 Language</label>
+                                        <select
+                                            id="bot-language"
+                                            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                        >
+                                            <option value="English">🇺🇸 English</option>
+                                            <option value="Spanish">🇪🇸 Spanish</option>
+                                            <option value="French">🇫🇷 French</option>
+                                            <option value="German">🇩🇪 German</option>
+                                            <option value="Portuguese">🇵🇹 Portuguese</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-white font-medium mb-2">👋 Greeting Message</label>
+                                        <textarea
+                                            id="bot-greeting"
+                                            placeholder="Hi! I'm here to help you with any questions about our services. How can I assist you today?"
+                                            rows="4"
+                                            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none resize-none"
+                                        ></textarea>
+                                    </div>
+                                    
+                                    <div class="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-4 border border-blue-500/30">
+                                        <h4 class="text-white font-medium mb-2">💡 Pro Tips</h4>
+                                        <ul class="text-white/80 text-sm space-y-1">
+                                            <li>• Choose a friendly, memorable name</li>
+                                            <li>• Keep greetings warm and professional</li>
+                                            <li>• Mention your main services in the greeting</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Train -->
+                <div id="step-2" class="step-content hidden">
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <h3 class="text-3xl font-bold text-white mb-2">🎓 Train Your AI Assistant</h3>
+                            <p class="text-white/70">Upload your business information so your AI can provide accurate responses</p>
+                        </div>
+                        
+                        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            <div class="space-y-8">
+                                <div>
+                                    <label class="block text-white font-medium mb-4">📄 Business Information</label>
+                                    <textarea
+                                        id="training-data"
+                                        placeholder="Tell us about your business, services, prices, policies, FAQ, etc. The more information you provide, the better your AI assistant will be at helping customers.
+
+Example:
+- We are a family restaurant serving Italian cuisine
+- Open Tuesday-Sunday, 11am-10pm
+- We offer dine-in, takeout, and delivery
+- Our specialties include homemade pasta and wood-fired pizza
+- Average meal price is $15-25 per person
+- We accept all major credit cards
+- Reservations recommended for groups of 6+"
+                                        rows="12"
+                                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-400 focus:outline-none resize-none"
+                                    ></textarea>
+                                    <p class="text-white/60 text-sm mt-2">
+                                        Current length: <span id="char-count">0</span> characters
+                                    </p>
+                                </div>
+                                
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div class="bg-white/5 rounded-lg p-4 text-center">
+                                        <div class="text-2xl mb-2">📋</div>
+                                        <h4 class="text-white font-medium">Services & Products</h4>
+                                        <p class="text-white/60 text-sm">What you offer and pricing</p>
+                                    </div>
+                                    <div class="bg-white/5 rounded-lg p-4 text-center">
+                                        <div class="text-2xl mb-2">⏰</div>
+                                        <h4 class="text-white font-medium">Hours & Location</h4>
+                                        <p class="text-white/60 text-sm">When and where to find you</p>
+                                    </div>
+                                    <div class="bg-white/5 rounded-lg p-4 text-center">
+                                        <div class="text-2xl mb-2">❓</div>
+                                        <h4 class="text-white font-medium">FAQ & Policies</h4>
+                                        <p class="text-white/60 text-sm">Common questions and rules</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Customize -->
+                <div id="step-3" class="step-content hidden">
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <h3 class="text-3xl font-bold text-white mb-2">🎨 Customize Your Assistant</h3>
+                            <p class="text-white/70">Make your AI assistant match your brand and personality</p>
+                        </div>
+                        
+                        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-white font-medium mb-4">🎨 Brand Colors</label>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="block text-white/80 text-sm mb-2">Primary Color</label>
+                                                <div class="flex items-center gap-3">
+                                                    <input
+                                                        type="color"
+                                                        id="primary-color"
+                                                        value="#3b82f6"
+                                                        class="w-12 h-12 rounded-lg border-2 border-white/20"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        id="primary-color-text"
+                                                        value="#3b82f6"
+                                                        class="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-white/80 text-sm mb-2">Accent Color</label>
+                                                <div class="flex items-center gap-3">
+                                                    <input
+                                                        type="color"
+                                                        id="accent-color"
+                                                        value="#8b5cf6"
+                                                        class="w-12 h-12 rounded-lg border-2 border-white/20"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        id="accent-color-text"
+                                                        value="#8b5cf6"
+                                                        class="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-white font-medium mb-4">👀 Live Preview</h4>
+                                        <div class="bg-gray-900 rounded-xl p-4" id="color-preview">
+                                            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+                                                <div 
+                                                    id="preview-avatar"
+                                                    class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold"
+                                                    style="background: linear-gradient(135deg, #3b82f6, #8b5cf6)"
+                                                >
+                                                    🤖
+                                                </div>
+                                                <div>
+                                                    <h5 class="text-white font-medium" id="preview-name">Your Bot</h5>
+                                                    <p class="text-green-400 text-xs">● Online</p>
+                                                </div>
+                                            </div>
+                                            <div class="space-y-3">
+                                                <div class="bg-white/10 rounded-lg p-3">
+                                                    <p class="text-white text-sm" id="preview-greeting">
+                                                        Hi! I'm here to help you with any questions. How can I assist you today?
+                                                    </p>
+                                                </div>
+                                                <div class="flex justify-end">
+                                                    <div 
+                                                        id="preview-message"
+                                                        class="bg-opacity-90 rounded-lg p-3 text-white text-sm max-w-xs"
+                                                        style="background-color: #3b82f6"
+                                                    >
+                                                        What are your hours?
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg p-4 border border-green-500/30">
+                                        <h4 class="text-white font-medium mb-2">✨ Customization Tips</h4>
+                                        <ul class="text-white/80 text-sm space-y-1">
+                                            <li>• Use your brand colors for consistency</li>
+                                            <li>• Match your business personality</li>
+                                            <li>• Test different color combinations</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Preview -->
+                <div id="step-4" class="step-content hidden">
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <h3 class="text-3xl font-bold text-white mb-2">✨ Preview Your Bot</h3>
+                            <p class="text-white/70">Test your bot before going live!</p>
+                        </div>
+                        
+                        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <!-- Bot Preview -->
+                                <div class="space-y-4">
+                                    <h4 class="text-xl font-semibold text-white flex items-center gap-2">
+                                        <span class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+                                        Live Preview
+                                    </h4>
+                                    <div class="bg-gray-900 rounded-xl p-4 min-h-[400px] flex flex-col">
+                                        <!-- Chat Header -->
+                                        <div class="flex items-center gap-3 p-3 border-b border-gray-700">
+                                            <div 
+                                                id="chat-avatar"
+                                                class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                                                style="background: linear-gradient(135deg, #3b82f6, #8b5cf6)"
+                                            >
+                                                🤖
+                                            </div>
+                                            <div>
+                                                <h5 class="text-white font-medium" id="chat-bot-name">Your Bot</h5>
+                                                <p class="text-green-400 text-xs">Online</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Messages -->
+                                        <div class="flex-1 p-3 space-y-3 overflow-y-auto max-h-80" id="chat-messages">
+                                            <div class="flex justify-start">
+                                                <div class="bg-gray-700 text-white px-4 py-2 rounded-2xl max-w-xs">
+                                                    <span id="initial-greeting">Hi! I'm your AI assistant. How can I help you today?</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Input -->
+                                        <div class="p-3 border-t border-gray-700">
+                                            <div class="flex gap-2" id="chat-input-area">
+                                                <input
+                                                    type="text"
+                                                    id="chat-input"
+                                                    placeholder="Type a message..."
+                                                    class="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                                />
+                                                <button
+                                                    id="send-button"
+                                                    class="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
+                                                    style="background-color: #3b82f6"
+                                                >
+                                                    Send
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Configuration Summary -->
+                                <div class="space-y-4">
+                                    <h4 class="text-xl font-semibold text-white">Configuration Summary</h4>
+                                    <div class="space-y-3" id="config-summary">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                    
+                                    <div class="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg p-4 border border-green-500/30">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-green-400">✅</span>
+                                            <h5 class="text-white font-medium">Ready to Deploy!</h5>
+                                        </div>
+                                        <p class="text-white/70 text-sm">Your bot is configured and ready to go live.</p>
+                                        <div class="mt-2 p-2 bg-green-500/20 rounded border border-green-500/30" id="email-status">
+                                            <p class="text-green-400 text-xs">
+                                                💬 Chat a few times to see lead capture in action
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Deploy -->
+                <div id="step-5" class="step-content hidden">
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <h3 class="text-3xl font-bold text-white mb-2">🚀 Deploy Your Bot</h3>
+                            <p class="text-white/70">Choose how you want to deploy your bot</p>
+                        </div>
+                        
+                        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            <!-- Deployment Options -->
+                            <div class="grid md:grid-cols-3 gap-4 mb-8">
+                                <button class="deploy-option p-4 rounded-xl border-2 border-blue-500 bg-blue-500/20 transition-all" data-option="embed">
+                                    <div class="text-2xl mb-2">🌐</div>
+                                    <h4 class="text-white font-semibold">Website Embed</h4>
+                                    <p class="text-white/60 text-sm">Add to any website</p>
+                                </button>
+                                <button class="deploy-option p-4 rounded-xl border-2 border-white/20 bg-white/5 hover:border-white/40 transition-all" data-option="qr">
+                                    <div class="text-2xl mb-2">📱</div>
+                                    <h4 class="text-white font-semibold">QR Code</h4>
+                                    <p class="text-white/60 text-sm">Print & share anywhere</p>
+                                </button>
+                                <button class="deploy-option p-4 rounded-xl border-2 border-white/20 bg-white/5 hover:border-white/40 transition-all" data-option="api">
+                                    <div class="text-2xl mb-2">⚡</div>
+                                    <h4 class="text-white font-semibold">API Integration</h4>
+                                    <p class="text-white/60 text-sm">Custom integrations</p>
+                                </button>
+                            </div>
+
+                            <!-- Deployment Content -->
+                            <div id="deploy-content">
+                                <!-- Will be populated by JavaScript based on selected option -->
+                            </div>
+
+                            <!-- Success Message -->
+                            <div class="mt-8 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl p-6 border border-green-500/30">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-4">🎉</div>
+                                    <h4 class="text-2xl font-bold text-white mb-2">Congratulations!</h4>
+                                    <p class="text-white/80 mb-4">Your <span id="final-bot-name">AI bot</span> is now ready to help your customers!</p>
+                                    
+                                    <div class="grid md:grid-cols-3 gap-4 mt-6">
+                                        <div class="bg-white/10 rounded-lg p-4">
+                                            <div class="text-2xl mb-2">📊</div>
+                                            <h5 class="text-white font-medium">Analytics</h5>
+                                            <p class="text-white/60 text-sm">Track conversations & insights</p>
+                                        </div>
+                                        <div class="bg-white/10 rounded-lg p-4">
+                                            <div class="text-2xl mb-2">🔧</div>
+                                            <h5 class="text-white font-medium">Customize</h5>
+                                            <p class="text-white/60 text-sm">Update anytime in dashboard</p>
+                                        </div>
+                                        <div class="bg-white/10 rounded-lg p-4">
+                                            <div class="text-2xl mb-2">💬</div>
+                                            <h5 class="text-white font-medium">Support</h5>
+                                            <p class="text-white/60 text-sm">24/7 technical assistance</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <button 
+                                        id="dashboard-button"
+                                        class="mt-6 px-8 py-3 rounded-xl font-medium text-white transition-all transform hover:scale-105"
+                                        style="background: linear-gradient(135deg, #3b82f6, #8b5cf6)"
+                                    >
+                                        🚀 Go to Dashboard
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between items-center mt-12 max-w-6xl mx-auto">
+                <button
+                    id="prev-button"
+                    class="px-6 py-3 rounded-xl font-medium transition-all bg-gray-600 text-gray-400 cursor-not-allowed"
+                >
+                    ← Previous
+                </button>
+                
+                <div class="text-white/60">
+                    Step <span id="current-step-number">1</span> of 5
+                </div>
+                
+                <button
+                    id="next-button"
+                    class="px-6 py-3 rounded-xl font-medium transition-all bg-gradient-to-r from-blue-600 to-purple-600 text-
