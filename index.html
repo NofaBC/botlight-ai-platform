@@ -892,52 +892,70 @@ fetch('/api/chat', {
                                         {/* Input */}
                                         <div className="p-3 border-t border-gray-700">
                                             {showEmailCapture ? (
-                                                <div className="flex gap-2">
+                                                <div className="flex gap-2" id="email-input-container">
                                                     <input
-                                                        key="email-input"
+                                                        id="email-input-field"
                                                         type="email"
-                                                        value={capturedEmail}
-                                                        onChange={(e) => setCapturedEmail(e.target.value)}
-                                                        onKeyDown={(e) => e.key === 'Enter' && handleEmailSubmit()}
+                                                        defaultValue=""
+                                                        onInput={(e) => setCapturedEmail(e.target.value)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                const email = e.target.value;
+                                                                if (email.includes('@')) {
+                                                                    setCapturedEmail(email);
+                                                                    handleEmailSubmit();
+                                                                }
+                                                            }
+                                                        }}
                                                         placeholder="Enter your email address..."
                                                         className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
                                                         autoComplete="email"
                                                         spellCheck="false"
                                                     />
                                                     <button
-                                                        onClick={handleEmailSubmit}
-                                                        disabled={!capturedEmail.includes('@')}
-                                                        className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                                        onClick={() => {
+                                                            const email = document.getElementById('email-input-field').value;
+                                                            if (email.includes('@')) {
+                                                                setCapturedEmail(email);
+                                                                handleEmailSubmit();
+                                                            }
+                                                        }}
+                                                        className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors"
                                                     >
                                                         Send Guide
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <div className="flex gap-2">
+                                                <div className="flex gap-2" id="chat-input-container">
                                                     <input
+                                                        id="chat-input-field"
                                                         type="text"
-                                                        value={inputMessage}
-                                                        onChange={handleInputChange}
-                                                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                                                        defaultValue=""
+                                                        onInput={(e) => setInputMessage(e.target.value)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                const message = e.target.value.trim();
+                                                                if (message) {
+                                                                    setInputMessage(message);
+                                                                    sendMessage();
+                                                                    e.target.value = '';
+                                                                }
+                                                            }
+                                                        }}
                                                         placeholder="Type a message..."
                                                         className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
                                                         autoComplete="off"
                                                         spellCheck="false"
                                                     />
                                                     <button
-                                                        onClick={sendMessage}
-                                                        style={{backgroundColor: botConfig.primaryColor}}
-                                                        className="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
-                                                    >
-                                                        Send
-                                                    </button>
-                                                </div>
-                                            )} text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                                        autoComplete="off"
-                                                        spellCheck="false"
-                                                    />
-                                                    <button
-                                                        onClick={sendMessage}
+                                                        onClick={() => {
+                                                            const message = document.getElementById('chat-input-field').value.trim();
+                                                            if (message) {
+                                                                setInputMessage(message);
+                                                                sendMessage();
+                                                                document.getElementById('chat-input-field').value = '';
+                                                            }
+                                                        }}
                                                         style={{backgroundColor: botConfig.primaryColor}}
                                                         className="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
                                                     >
