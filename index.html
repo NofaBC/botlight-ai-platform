@@ -369,6 +369,10 @@ Example:
                 ]);
                 const [inputMessage, setInputMessage] = useState('');
                 const [isTyping, setIsTyping] = useState(false);
+                const [messageCount, setMessageCount] = useState(0);
+                const [showEmailCapture, setShowEmailCapture] = useState(false);
+                const [capturedEmail, setCapturedEmail] = useState('');
+                const [emailCollected, setEmailCollected] = useState(false);
 
                 const sendMessage = async () => {
                     if (!inputMessage.trim()) return;
@@ -377,19 +381,99 @@ Example:
                     setMessages(prev => [...prev, userMessage]);
                     setInputMessage('');
                     setIsTyping(true);
+                    setMessageCount(prev => prev + 1);
                     
-                    // Simulate bot response (in real version, this calls your API)
+                    // Simulate bot response with lead magnet logic
                     setTimeout(() => {
-                        const responses = [
-                            "Thanks for your message! I'm here to help with any questions about our services.",
-                            "I'd be happy to assist you with that. Let me provide you with the information you need.",
-                            "That's a great question! Based on the training data provided, here's what I can tell you...",
-                            "I understand what you're looking for. Let me help you with that right away."
-                        ];
-                        const botResponse = { role: 'bot', content: responses[Math.floor(Math.random() * responses.length)] };
+                        let botResponse;
+                        
+                        // After 2-3 messages, offer lead magnet
+                        if (messageCount >= 2 && !emailCollected && !showEmailCapture) {
+                            const leadMagnets = [
+                                `Great question! By the way, would you like our free "${botConfig.industry || 'Business'} Success Guide"? It has insider tips and best practices that most businesses don't know. I can email it to you right away!`,
+                                `I'm happy to help with that! Speaking of which, would you like our complimentary "${botConfig.industry || 'Industry'} Insider Report"? It's packed with valuable insights. I can send it to your email instantly!`,
+                                `That's a fantastic question! You seem really interested in improving your business. Would you like our free "${botConfig.industry || 'Business'} Optimization Checklist"? I can email it to you right now!`
+                            ];
+                            botResponse = { 
+                                role: 'bot', 
+                                content: leadMagnets[Math.floor(Math.random() * leadMagnets.length)],
+                                isLeadMagnet: true
+                            };
+                        } else if (showEmailCapture) {
+                            // Handle email collection
+                            botResponse = { 
+                                role: 'bot', 
+                                content: "Perfect! What's your email address and I'll send that valuable guide to you immediately?",
+                                isEmailRequest: true
+                            };
+                        } else {
+                            // Regular responses
+                            const responses = [
+                                "Thanks for your message! I'm here to help with any questions about our services.",
+                                "I'd be happy to assist you with that. Let me provide you with the information you need.",
+                                "That's a great question! Based on the training data provided, here's what I can tell you...",
+                                "I understand what you're looking for. Let me help you with that right away.",
+                                "Excellent! I'm glad I could help you with that information."
+                            ];
+                            botResponse = { 
+                                role: 'bot', 
+                                content: responses[Math.floor(Math.random() * responses.length)]
+                            };
+                        }
+                        
                         setMessages(prev => [...prev, botResponse]);
                         setIsTyping(false);
                     }, 1500);
+                };
+
+                const handleLeadMagnetResponse = (accepted) => {
+                    const userResponse = { 
+                        role: 'user', 
+                        content: accepted ? "Yes, I'd love that!" : "No thanks, maybe later" 
+                    };
+                    setMessages(prev => [...prev, userResponse]);
+                    
+                    if (accepted) {
+                        setShowEmailCapture(true);
+                        setTimeout(() => {
+                            const botResponse = { 
+                                role: 'bot', 
+                                content: "Awesome! What's your email address and I'll send that valuable guide over right away?",
+                                isEmailRequest: true
+                            };
+                            setMessages(prev => [...prev, botResponse]);
+                        }, 1000);
+                    } else {
+                        setTimeout(() => {
+                            const botResponse = { 
+                                role: 'bot', 
+                                content: "No problem at all! The offer stands anytime. How else can I help you today?"
+                            };
+                            setMessages(prev => [...prev, botResponse]);
+                        }, 1000);
+                    }
+                };
+
+                const handleEmailSubmit = () => {
+                    if (!capturedEmail.includes('@')) return;
+                    
+                    const userResponse = { role: 'user', content: capturedEmail };
+                    setMessages(prev => [...prev, userResponse]);
+                    setCapturedEmail('');
+                    setEmailCollected(true);
+                    setShowEmailCapture(false);
+                    
+                    // Store email (in real app, this would save to database)
+                    console.log('Email captured:', capturedEmail);
+                    
+                    setTimeout(() => {
+                        const botResponse = { 
+                            role: 'bot', 
+                            content: "Perfect! I've sent the guide to your email. You should receive it within the next few minutes. Is there anything else I can help you with today?",
+                            isSuccess: true
+                        };
+                        setMessages(prev => [...prev, botResponse]);
+                    }, 1000);
                 };
 
                 return (
@@ -753,9 +837,29 @@ fetch('/api/chat', {
                                                     <div className={`max-w-xs px-4 py-2 rounded-2xl ${
                                                         msg.role === 'user' 
                                                             ? 'text-white' 
-                                                            : 'bg-gray-700 text-white'
+                                                            : msg.isSuccess
+                                                                ? 'bg-green-600 text-white'
+                                                                : 'bg-gray-700 text-white'
                                                     }`} style={msg.role === 'user' ? {backgroundColor: botConfig.primaryColor} : {}}>
                                                         {msg.content}
+                                                        
+                                                        {/* Lead Magnet Buttons */}
+                                                        {msg.isLeadMagnet && (
+                                                            <div className="mt-3 space-x-2">
+                                                                <button
+                                                                    onClick={() => handleLeadMagnetResponse(true)}
+                                                                    className="bg-green-600 text-white px-3 py-1 rounded-full text-xs hover:bg-green-700 transition-colors"
+                                                                >
+                                                                    Yes, send it!
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleLeadMagnetResponse(false)}
+                                                                    className="bg-gray-600 text-white px-3 py-1 rounded-full text-xs hover:bg-gray-700 transition-colors"
+                                                                >
+                                                                    No thanks
+                                                                </button>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))}
@@ -774,23 +878,43 @@ fetch('/api/chat', {
                                         
                                         {/* Input */}
                                         <div className="p-3 border-t border-gray-700">
-                                            <div className="flex gap-2">
-                                                <input
-                                                    type="text"
-                                                    value={inputMessage}
-                                                    onChange={(e) => setInputMessage(e.target.value)}
-                                                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                                                    placeholder="Type a message..."
-                                                    className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                                />
-                                                <button
-                                                    onClick={sendMessage}
-                                                    style={{backgroundColor: botConfig.primaryColor}}
-                                                    className="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
-                                                >
-                                                    Send
-                                                </button>
-                                            </div>
+                                            {showEmailCapture ? (
+                                                <div className="flex gap-2">
+                                                    <input
+                                                        type="email"
+                                                        value={capturedEmail}
+                                                        onChange={(e) => setCapturedEmail(e.target.value)}
+                                                        onKeyPress={(e) => e.key === 'Enter' && handleEmailSubmit()}
+                                                        placeholder="Enter your email address..."
+                                                        className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                                    />
+                                                    <button
+                                                        onClick={handleEmailSubmit}
+                                                        disabled={!capturedEmail.includes('@')}
+                                                        className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                                    >
+                                                        Send Guide
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="flex gap-2">
+                                                    <input
+                                                        type="text"
+                                                        value={inputMessage}
+                                                        onChange={(e) => setInputMessage(e.target.value)}
+                                                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                                                        placeholder="Type a message..."
+                                                        className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                                    />
+                                                    <button
+                                                        onClick={sendMessage}
+                                                        style={{backgroundColor: botConfig.primaryColor}}
+                                                        className="text-white px-4 py-2 rounded-full hover:opacity-80 transition-opacity"
+                                                    >
+                                                        Send
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
